@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pingvin 3D xotiralar yo‘lagi</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{height:100%;margin:0;background:#10192e;overflow:hidden;font-family:system-ui,sans-serif;color:#fff;-webkit-user-select:none;user-select:none}
+#view{position:relative;height:100%}
+canvas{display:block;touch-action:none}
+.ui{position:absolute;z-index:10}
+.btn{border:0;color:#fff;background:rgba(16,25,46,.72);backdrop-filter:blur(4px);touch-action:none;font:inherit}
+.arr{width:66px;height:66px;border-radius:50%;font-size:28px}
+.arr:active{background:#f4a261}
+#L,#R{bottom:calc(env(safe-area-inset-bottom,0px) + 14px)}#L{left:12px}#R{left:86px}
+#F{right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 88px)}#B{right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px)}
+.pill{height:42px;border-radius:21px;padding:0 15px;font-size:15px;background:#e76f51}
+#add{top:calc(env(safe-area-inset-top,0px) + 10px);right:12px}
+#back{top:calc(env(safe-area-inset-top,0px) + 166px);right:12px;background:#3a4a75;display:none}#cfg{top:calc(env(safe-area-inset-top,0px) + 62px);right:12px;display:none;background:#3a4a75}#skin{top:calc(env(safe-area-inset-top,0px) + 114px);right:12px;background:#3a4a75}#add{display:none}.box .row input{margin:3px 0}
+#where{top:calc(env(safe-area-inset-top,0px) + 14px);left:12px;font-size:14px;background:rgba(16,25,46,.72);padding:8px 13px;border-radius:18px}
+#hint{top:calc(env(safe-area-inset-top,0px) + 60px);left:12px;font-size:12px;background:rgba(16,25,46,.72);padding:6px 11px;border-radius:14px;max-width:55%}
+#fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .28s;z-index:40}
+.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.box{background:#1d2b4d;border-radius:16px;padding:14px;width:100%;max-width:560px;max-height:92%;overflow:auto}
+.box img,.box video{width:100%;max-height:60vh;object-fit:contain;border-radius:10px;background:#000;display:block}
+.box p{margin:10px 0 4px;font-size:17px;line-height:1.4;white-space:pre-wrap}
+.box small{color:#a9b4d0}
+.box input,.box textarea,.box select{width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border-radius:10px;border:0;font:inherit;font-size:16px;background:#fff;color:#111}
+.box textarea{min-height:76px}
+.row{display:flex;gap:8px;margin-top:10px}
+.row button{flex:1;border:0;border-radius:10px;padding:12px;font:inherit;font-size:16px;color:#fff;background:#e76f51}
+.row button.g{background:#3a4a75}
+</style>
+</head>
+<body>
+<div id="view">
+  <div class="ui" id="where">Yo‘lak</div>
+  <div class="ui" id="hint">▲ yurish, ◀ ▶ burilish. Ramka yoki eshikka bossangiz, pingvin o‘zi boradi</div>
+  <button class="ui btn pill" id="add">＋ Xotira</button>
+  <button class="ui btn pill" id="cfg">⚙ Eshiklar</button>
+  <button class="ui btn pill" id="skin">🎨 Qahramon</button>
+  <button class="ui btn pill" id="back">🚪 Yo‘lakka</button>
+  <button class="ui btn arr" id="L">◀</button><button class="ui btn arr" id="R">▶</button>
+  <button class="ui btn arr" id="F">▲</button><button class="ui btn arr" id="B">▼</button>
+</div>
+<div id="fade"></div>
+<div class="modal" id="mShow"><div class="box" id="showBox"></div></div>
+<div class="modal" id="mPw"><div class="box"><b id="pwT"></b><input id="pwI" type="password" placeholder="Parol"><small id="pwE" style="color:#ffb4a2"></small><div class="row"><button class="g" id="pwC">Bekor</button><button id="pwOk">Kirish</button></div><div class="row" id="pwOr"></div></div></div>
+<div class="modal" id="mCfg"><div class="box"><b>Eshiklar: ism va parol</b><br><small>Parol bo‘sh qolsa o‘zgarmaydi. ❌ parolni olib tashlaydi.</small><div id="cfgList"></div><div class="row"><button class="g" id="rst">♻ Tiklash</button><button class="g" id="bak">💾 Zaxira nusxa</button></div><div class="row"><button class="g" id="mig" style="display:none">📥 Telefondagi eski xotiralarni ko‘chirish</button></div><div class="row"><button class="g" id="cfgC">Yopish</button><button id="cfgS">Saqlash</button></div></div></div>
+<div class="modal" id="mSkin"><div class="box"><b>Qahramonni tanlang</b><div class="row" id="skinList" style="flex-wrap:wrap"></div></div></div>
+<div class="modal" id="mAdd"><div class="box">
+  <b id="addT">Yangi xotira</b>
+  <input id="f" type="file" accept="image/*,video/*" multiple>
+  <textarea id="cap" placeholder="Nima bo‘lgan edi? (rasm bo‘lmasa ham yozsa bo‘ladi)"></textarea>
+  <input id="dt" type="date">
+  <select id="rm"></select>
+  <select id="fr"></select>
+  <select id="sz"><option value="1">Ramka o‘lchami: oddiy</option><option value="1.25">Katta</option><option value="0.8">Kichik</option></select>
+  <div class="row"><button class="g" id="cancel">Bekor</button><button id="save">Qo‘yish</button></div>
+</div></div>
+<script src="data.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>(()=>{
+const $=id=>document.getElementById(id);
+if(!window.THREE){document.body.innerHTML="<p style='padding:20px'>3D kutubxonasi yuklanmadi. Internetni tekshirib, sahifani qayta oching.</p>";throw 0}
+const T=THREE;
+let items=[],db=null,cur=0,urls=[],corridor=null,roomHall=null,busy=false,cool=0,tgt=null;
+let trash=[],dbx=null,asset=null,isOwner=false,rooms={},unl={};try{unl=JSON.parse(localStorage.getItem("pg-unl")||"{}")}catch(e){}
+// ---- storage ----
+function openDB(){return new Promise(r=>{try{const q=indexedDB.open("pingvin-yolak",1);q.onupgradeneeded=()=>q.result.createObjectStore("m",{keyPath:"id"});q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)}catch(e){r(null)}})}
+function dbAll(){return new Promise(r=>{if(!db)return r([]);try{const q=db.transaction("m").objectStore("m").getAll();q.onsuccess=()=>r(q.result);q.onerror=()=>r([])}catch(e){r([])}})}
+function dbPut(m){return new Promise(r=>{if(!db)return r(false);try{const t=db.transaction("m","readwrite");t.objectStore("m").put(m);t.oncomplete=()=>r(true);t.onerror=()=>r(false)}catch(e){r(false)}})}
+function dbDel(id){return new Promise(r=>{if(!db)return r();try{const t=db.transaction("m","readwrite");t.objectStore("m").delete(id);t.oncomplete=()=>r()}catch(e){r()}})}
+function srcOf(m){if(m.src)return m.src;if(m.blob){const u=URL.createObjectURL(m.blob);urls.push(u);return u}return""}
+const esc=s=>String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=d=>{const x=new Date(d);return d&&!isNaN(x)?x.toLocaleDateString("uz-UZ",{year:"numeric",month:"long",day:"numeric"}):""};
+// ---- three setup ----
+const view=$("view"),renderer=new T.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));view.insertBefore(renderer.domElement,view.firstChild);
+const scene=new T.Scene();scene.background=new T.Color(0x10192e);scene.fog=new T.Fog(0x10192e,12,58);
+const cam=new T.PerspectiveCamera(65,1,.1,150);
+scene.add(new T.AmbientLight(0xffffff,.55));scene.add(new T.HemisphereLight(0xffffff,0x8a7a6a,.45));
+const dl=new T.DirectionalLight(0xffffff,.7);dl.position.set(2,6,3);dl.castShadow=true;dl.shadow.mapSize.set(1024,1024);dl.shadow.bias=-.0005;
+const sc_=dl.shadow.camera;sc_.left=sc_.bottom=-5;sc_.right=sc_.top=5;sc_.near=1;sc_.far=20;sc_.updateProjectionMatrix();scene.add(dl);scene.add(dl.target);
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
+function rs(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix()}
+addEventListener("resize",rs);rs();
+const mat=c=>new T.MeshLambertMaterial({color:c});
+const cv=(w,h)=>{const c=document.createElement("canvas");c.width=w;c.height=h;return c};
+function wrap(x,t,px,py,mw,lh,max){let l="",n=0;for(const w of String(t).split(/\s+/)){const s=l?l+" "+w:w;if(x.measureText(s).width>mw&&l){x.fillText(l,px,py+n*lh);l=w;if(++n>=max)return}else l=s}x.fillText(l,px,py+n*lh)}
+function signTex(t,w,h,bg,fg,fs){const c=cv(w,h),x=c.getContext("2d");x.fillStyle=bg;x.fillRect(0,0,w,h);x.fillStyle=fg;x.font="bold "+fs+"px system-ui,sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(t,w/2,h/2);return new T.CanvasTexture(c)}
+function frameTex(m){
+  const c=cv(512,384),x=c.getContext("2d"),tex=new T.CanvasTexture(c),done=()=>{tex.needsUpdate=true};
+  const cap=t=>{if(!t)return;const g=x.createLinearGradient(0,294,0,384);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,.78)");x.fillStyle=g;x.fillRect(0,294,512,90);x.fillStyle="#fff";x.font="bold 26px system-ui,sans-serif";x.textAlign="left";x.textBaseline="alphabetic";wrap(x,t,16,340,480,30,2)};
+  const cover=(s,w,h)=>{const k=Math.max(512/w,384/h);x.drawImage(s,(512-w*k)/2,(384-h*k)/2,w*k,h*k)};
+  if(!m){x.fillStyle="#e9e2d0";x.fillRect(0,0,512,384);x.strokeStyle="#8a7a5a";x.lineWidth=6;x.setLineDash([22,16]);x.strokeRect(20,20,472,344);x.fillStyle="#8a7a5a";x.textAlign="center";x.textBaseline="alphabetic";x.font="bold 150px system-ui";x.fillText("+",256,230);x.font="28px system-ui";x.fillText("Xotira qo‘shing",256,320)}
+  else if(m.kind==="text"){x.fillStyle="#fff6d8";x.fillRect(0,0,512,384);x.fillStyle="#3a2a10";x.font="28px Georgia,serif";x.textAlign="left";x.textBaseline="alphabetic";wrap(x,m.caption,28,64,456,36,9)}
+  else{x.fillStyle="#333";x.fillRect(0,0,512,384);
+    const badge=()=>{if(m.kind!=="video")return;x.fillStyle="rgba(0,0,0,.5)";x.beginPath();x.arc(256,170,48,0,7);x.fill();x.fillStyle="#fff";x.beginPath();x.moveTo(240,145);x.lineTo(240,195);x.lineTo(282,170);x.fill()};
+    badge();done();
+    if(m.kind==="image"){const im=new Image();im.onload=()=>{cover(im,im.width,im.height);cap(m.caption);done()};im.src=srcOf(m)}
+    else{const v=document.createElement("video");v.muted=true;v.playsInline=true;v.preload="auto";
+      const d=()=>{if(v.videoWidth){cover(v,v.videoWidth,v.videoHeight);badge();cap(m.caption);done()}};
+      v.addEventListener("loadeddata",d);v.addEventListener("seeked",d);v.src=srcOf(m)+"#t=0.3"}}
+  cap(m&&m.kind==="text"?"":"");
+  return tex}
+function doorTex(k,n){const c=cv(128,256),x=c.getContext("2d");x.fillStyle=n?"#2f7d4f":"hsl("+(k*47)%360+",35%,38%)";x.fillRect(0,0,128,256);x.strokeStyle="rgba(0,0,0,.35)";x.lineWidth=4;x.strokeRect(14,14,100,100);x.strokeRect(14,130,100,112);x.fillStyle="#f5d36a";x.beginPath();x.arc(104,150,7,0,7);x.fill();x.fillStyle="#fff";x.textAlign="center";x.font="bold 54px system-ui";x.fillText(k,64,85);if(n){x.font="22px system-ui";x.fillText("🖼 "+n,64,205)}return new T.CanvasTexture(c)}
+// ---- halls ----
+function buildHall(cx,list,o){
+  const g=new T.Group();g.position.x=cx;scene.add(g);
+  const W=o.w,H=3.6,n0=Math.max(list.length+2,o.min),n=n0+n0%2,fEnd=6+n/2*5,dS=fEnd+3,L=o.doors?dS+15*3.4+3:fEnd+3,zc=(3-L)/2,len=L+3,clk=[],doors=[];
+  const add=(geo,m,x,y,z,ry,rx)=>{const me=new T.Mesh(geo,m);me.position.set(x,y,z);if(ry)me.rotation.y=ry;if(rx)me.rotation.x=rx;g.add(me);return me};
+  add(new T.PlaneGeometry(W,len),mat(0x6b4a3a),0,0,zc,0,-Math.PI/2).receiveShadow=true;
+  add(new T.PlaneGeometry(2,len),mat(0x8c2f3e),0,.01,zc,0,-Math.PI/2).receiveShadow=true;
+  add(new T.PlaneGeometry(W,len),mat(0xf2f2f2),0,H,zc,0,Math.PI/2);
+  add(new T.PlaneGeometry(len,H),mat(0xf3e6c8),-W/2,H/2,zc,Math.PI/2);
+  add(new T.PlaneGeometry(len,H),mat(0xcfe3f5),W/2,H/2,zc,-Math.PI/2);
+  add(new T.PlaneGeometry(W,H),mat(0xe8dcc0),0,H/2,3,Math.PI);
+  add(new T.PlaneGeometry(W,H),mat(0xe8dcc0),0,H/2,-L,0);
+  const lamp=new T.MeshBasicMaterial({color:0xfff6d0});
+  for(let z=-3;z>-L;z-=7)add(new T.BoxGeometry(1.4,.06,.5),lamp,0,H-.03,z);
+  for(let i=0;i<n;i++){
+    const m=list[i],side=i%2?1:-1,z=-(6+Math.floor(i/2)*5),fg=new T.Group();
+    fg.position.set(side*(W/2-.08),1.9,z);fg.rotation.y=-side*Math.PI/2;
+    const fr=FR[m&&m.fr]||FR.yogoch,th=fr[2],sz=(m&&m.sz)||1;fg.add(new T.Mesh(new T.BoxGeometry(2.2+th*2,1.65+th*2,.1),mat(fr[1])));fg.scale.set(sz,sz,1);
+    const pl=new T.Mesh(new T.PlaneGeometry(2.2,1.65),new T.MeshBasicMaterial({map:frameTex(m)}));
+    pl.position.z=.06;pl.userData={t:"frame",m,tx:cx+side*(W/2-3),z};fg.add(pl);g.add(fg);clk.push(pl)}
+  if(o.doors){
+    const by={};items.forEach(m=>{if(m.room)by[m.room]=(by[m.room]||0)+1});
+    add(new T.PlaneGeometry(5,1),new T.MeshBasicMaterial({map:signTex("30 ta xona ➜ kirib ko‘ring",512,100,"#2a3b66","#ffd166",40)}),0,2.4,-L+.05);
+    for(let k=1;k<=30;k++){
+      const i=k-1,side=i%2?1:-1,z=-(dS+Math.floor(i/2)*3.4),dg=new T.Group();
+      dg.position.set(side*(W/2-.08),1.35,z);dg.rotation.y=-side*Math.PI/2;
+      dg.add(new T.Mesh(new T.BoxGeometry(1.9,2.8,.1),mat(0x3b2a1a)));
+      const dp=new T.Mesh(new T.PlaneGeometry(1.6,2.6),new T.MeshBasicMaterial({map:doorTex(k,by[k]||0)}));
+      dp.position.z=.06;dp.userData={t:"door",k,side,z,tx:cx+side*2.3};dg.add(dp);
+      const rn=rooms[k]||{},tx=(rn.pw?"🔒 ":"")+(rn.name||"—"),np=new T.Mesh(new T.PlaneGeometry(1.7,.5),new T.MeshBasicMaterial({map:signTex(tx,340,100,"#2a3b66","#ffd166",tx.length>11?32:44)}));np.position.set(0,1.75,.06);dg.add(np);g.add(dg);clk.push(dp);doors.push(dp.userData)}}
+  if(o.exit){
+    const ex=add(new T.PlaneGeometry(1.8,2.6),new T.MeshBasicMaterial({map:signTex("🚪 Chiqish",180,260,"#5b3a1a","#fff",34)}),0,1.3,2.94,Math.PI);
+    ex.userData={t:"exit"};clk.push(ex)}
+  return{g,W,L,cx,clk,doors}}
+function disposeHall(h){scene.remove(h.g);h.g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){if(o.material.map)o.material.map.dispose();o.material.dispose()}})}
+function rebuild(){
+  [corridor,roomHall].forEach(h=>h&&disposeHall(h));urls.forEach(u=>URL.revokeObjectURL(u));urls=[];
+  items.sort((a,b)=>(a.date||"").localeCompare(b.date||"")||String(a.id).localeCompare(String(b.id)));
+  corridor=buildHall(0,items.filter(m=>!m.room),{w:6,min:8,doors:true});
+  roomHall=cur?buildHall(200,items.filter(m=>m.room===cur),{w:8,min:6,exit:true}):null;
+  $("where").textContent=cur?(rooms[cur]&&rooms[cur].name||cur+"-xona"):"Yo‘lak";$("back").style.display=cur?"block":"none"}
+// ---- penguin ----
+const P=new T.Vector3(0,0,0);let ang=0,phase=0;
+const FR={yogoch:["Yog‘och",0x8a5a2b,.15],qalin:["Qalin yog‘och",0x5a3a1c,.32],oltin:["Oltin",0xd4af37,.2],qora:["Qora",0x151515,.12],oq:["Oq",0xf5f5f5,.15],pushti:["Pushti",0xf28cb1,.18],kok:["Ko‘k",0x3a86ff,.15],yashil:["Yashil",0x2a9d8f,.15]};
+const SK={pingvin:{n:"🐧 Pingvin",b:0x1b1b24,bl:0xffffff,sn:["cone",0xf4a300],ft:0xf4a300,sc:0xd62839},mushuk:{n:"🐱 Mushuk",b:0xf4a261,bl:0xfff1e0,sn:["ball",0xf28482],ft:0xf4a261,ear:"cone",sc:0x4361ee},ayiq:{n:"🐻 Ayiq",b:0x8b5e3c,bl:0xd9b38c,sn:["ball",0xd9b38c],ft:0x6f4a2d,ear:"ball",sc:0x2a9d8f},baqa:{n:"🐸 Baqa",b:0x4caf50,bl:0xc8e6a0,ft:0x388e3c,bump:1,sc:0xffd166}};
+function makeChar(key){if(FV[key])return makeFluffy(key);const s=SK[key]||SK.pingvin;const g=new T.Group(),b=new T.Group();g.add(b);
+  const S=r=>new T.SphereGeometry(r,32,24),m=(geo,c,x,y,z,sx,sy,sz)=>{const me=new T.Mesh(geo,new T.MeshStandardMaterial({color:c,roughness:.6}));me.castShadow=true;me.position.set(x,y,z);me.scale.set(sx||1,sy||1,sz||1);b.add(me);return me};
+  m(S(.5),s.b,0,.7,0,1,1.25,.9);m(S(.42),s.bl,0,.64,-.17,.9,1.15,.6);m(S(.32),s.b,0,1.52,0);
+  for(const e of[-1,1]){if(s.bump){m(S(.11),s.b,e*.18,1.78,-.1);m(S(.07),0xffffff,e*.18,1.8,-.18);m(S(.035),0,e*.18,1.8,-.24)}else{m(S(.08),0xffffff,e*.13,1.58,-.26);m(S(.04),0,e*.13,1.58,-.33)}
+    if(s.ear)m(s.ear==="cone"?new T.ConeGeometry(.12,.28,10):S(.12),s.b,e*.2,1.82,0)}
+  if(s.sn){if(s.sn[0]==="cone")m(new T.ConeGeometry(.09,.26,12),s.sn[1],0,1.47,-.38).rotation.x=-Math.PI/2;else m(S(.11),s.sn[1],0,1.46,-.33,1,.8,.8)}
+  m(new T.TorusGeometry(.3,.07,8,20),s.sc,0,1.2,0).rotation.x=Math.PI/2;
+  g.fl=[-1,1].map(e=>{const f=m(S(.14),s.b,e*.52,.75,0,.4,1.5,.8);f.s=e;return f});
+  g.ft=[-1,1].map(e=>m(S(.15),s.ft,e*.2,.06,-.1,1,.4,1.5));g.b=b;
+  const sh=new T.Mesh(new T.CircleGeometry(.55,16),new T.MeshBasicMaterial({color:0,transparent:true,opacity:.3}));sh.rotation.x=-Math.PI/2;sh.position.y=.02;g.add(sh);
+  scene.add(g);return g}
+const FV={
+ momiq:{n:"💜 Momiq",fur:0xb8a4ea,lt:0xd8ccf7,eo:0x9ccbf3,ei:0xf6b6c6,bl:0xf4a3b5,no:0x5a3b4a,cl:0xe8935a,tail:0xffffff,ear:{r:.36,x:.55,y:1.05,z:.3,px:.46,py:1.98,t:.4}},
+ quyon:{n:"🐰 Quyon",fur:0xf7f3fb,lt:0xffffff,eo:0xf7f3fb,ei:0xffb7cc,bl:0xff9fb5,no:0xf08aa5,cl:0xf3b6c6,tail:0xffffff,ear:{r:.4,x:.34,y:1,z:.26,px:.3,py:2.3,t:.18}},
+ tulki:{n:"🦊 Tulki",fur:0xf08a3c,lt:0xfff0dc,eo:0xf08a3c,ei:0x3b2a22,bl:0xff9f80,no:0x2b2220,cl:0x3b2a22,tail:0xf08a3c,tip:1,tl:{r:.24,e:2.2},ear:{r:.38,x:.5,y:1.1,z:.28,px:.45,py:2.02,t:.32}}};
+const FM={};let FT=null;
+function furMats(hex,n){const k=hex+"_"+n;if(FM[k])return FM[k];
+  if(!FT){const c=cv(64,64),x=c.getContext("2d"),d=x.createImageData(64,64);for(let i=0;i<d.data.length;i+=4){d.data[i]=d.data[i+1]=d.data[i+2]=Math.random()*255;d.data[i+3]=255}x.putImageData(d,0,0);
+    FT=new T.CanvasTexture(c);FT.wrapS=FT.wrapT=T.RepeatWrapping;FT.repeat.set(5,2.5);FT.minFilter=T.LinearFilter;FT.generateMipmaps=false}
+  const c=new T.Color(hex),r=c.clone().multiplyScalar(.7),t=c.clone().lerp(new T.Color(0xffffff),.2);
+  return FM[k]=Array.from({length:n},(_,i)=>new T.MeshStandardMaterial({color:r.clone().lerp(t,i/n),roughness:1,alphaMap:FT,alphaTest:.1+.8*i/n}))}
+function makeFluffy(key){
+  const v=FV[key],g=new T.Group(),b=new T.Group();g.add(b);
+  const U=new T.SphereGeometry(1,28,20),st=(c,r)=>new T.MeshStandardMaterial({color:c,roughness:r==null?.9:r}),bas=c=>new T.MeshBasicMaterial({color:c});
+  const m=(mt,x,y,z,sx,sy,sz,par)=>{const me=new T.Mesh(U,mt);me.position.set(x,y,z);me.scale.set(sx,sy,sz);me.castShadow=true;(par||b).add(me);return me};
+  const fp=(par,mats,x,y,z,sx,sy,sz,rz)=>{const q=new T.Group();q.position.set(x,y,z);q.scale.set(sx,sy,sz);if(rz)q.rotation.z=rz;
+    const core=new T.Mesh(U,new T.MeshStandardMaterial({color:mats[0].color,roughness:1}));core.castShadow=true;q.add(core);
+    mats.forEach((mt,i)=>{const sh=new T.Mesh(U,mt),k=1+(i+1)*.12/mats.length;sh.scale.set(k,k,k);q.add(sh)});par.add(q);return q};
+  fp(b,furMats(v.fur,14),0,.74,0,.58,.6,.54);fp(b,furMats(v.lt,8),0,.7,-.32,.34,.4,.26);fp(b,furMats(v.fur,14),0,1.4,0,.74,.66,.66);
+  const eyeM=new T.MeshPhysicalMaterial({color:0x2a170d,roughness:.12,clearcoat:1,clearcoatRoughness:.05}),irisM=st(0x8a5632,.3),iri2=st(0xc58a52,.3),lash=st(0x2a170d),eyes=[],ears=[],cheek=new T.MeshBasicMaterial({color:v.bl,transparent:true,opacity:.55});
+  for(const e of[-1,1]){
+    const eg=new T.Group();eg.position.set(e*.29,1.42,-.58);b.add(eg);eyes.push(eg);
+    m(eyeM,0,0,0,.17,.19,.085,eg);m(irisM,0,-.04,-.05,.105,.105,.042,eg);m(iri2,0,-.065,-.075,.065,.065,.03,eg);
+    m(bas(0x050302),0,-.01,-.085,.055,.055,.017,eg);m(bas(0xffffff),.05,.07,-.1,.045,.045,.018,eg);m(bas(0xffffff),-.05,-.07,-.1,.022,.022,.009,eg);
+    m(lash,e*.13,.17,-.04,.075,.011,.008,eg).rotation.z=e*.5;
+    m(cheek,e*.46,1.24,-.5,.12,.085,.035);
+    const mo=new T.Mesh(new T.TorusGeometry(.03,.008,6,12,Math.PI),st(v.no));mo.position.set(e*.035,1.245,-.645);mo.rotation.z=Math.PI;b.add(mo);
+    m(bas(0xffffff),e*.016,1.222,-.64,.012,.016,.006);
+    fp(b,furMats(v.fur,6),e*.07,.98,-.5,.085,.085,.085);
+    const E=v.ear,tz=-e*E.t,o=fp(b,furMats(v.eo,8),e*E.px,E.py,0,E.r*E.x,E.r*E.y,E.r*E.z,tz),
+      inn=m(st(v.ei,1),e*E.px*.97,E.py-.02,-E.r*E.z*1.05,E.r*E.x*.6,E.r*E.y*.78,E.r*E.z*.4);inn.rotation.z=tz;ears.push([o,inn,tz])}
+  m(st(v.no,.35),0,1.3,-.66,.06,.045,.04);
+  g.fl=[-1,1].map(e=>{const a=fp(b,furMats(v.fur,6),e*.4,.92,-.4,.14,.26,.14,e*.5);a.s=e;return a});
+  g.ft=[-1,1].map(e=>{const f=new T.Group();f.position.set(e*.27,.12,-.1);b.add(f);m(st(v.fur,1),0,0,0,.19,.12,.25,f);
+    for(let j=-1;j<=1;j++){const c=new T.Mesh(new T.ConeGeometry(.022,.08,8),st(v.cl,.5));c.position.set(j*.07,-.01,-.24);c.rotation.x=-Math.PI/2;f.add(c)}return f});
+  const tl=new T.Group(),tc=v.tl||{r:.2,e:1};tl.position.set(0,.5,.58);b.add(tl);
+  fp(tl,furMats(v.tail,10),0,0,tc.e>1?.25:0,tc.r,tc.r,tc.r*tc.e);if(v.tip)fp(tl,furMats(0xffffff,8),0,0,.68,.2,.2,.2);if(tc.e>1)tl.rotation.x=-.55;
+  g.b=b;const sh=new T.Mesh(new T.CircleGeometry(.6,20),new T.MeshBasicMaterial({color:0,transparent:true,opacity:.25}));sh.rotation.x=-Math.PI/2;sh.position.y=.02;g.add(sh);
+  g.tick=(t,dt,w)=>{const k=(t%4.2)<.12?.1:1;eyes.forEach(q=>q.scale.y=k);
+    ears.forEach((q,i)=>{q[0].rotation.z=q[1].rotation.z=q[2]+Math.sin(t*1.6+i*2)*.05});
+    tl.rotation.y=Math.sin(t*(w?11:2.2))*(w?.45:.18);b.scale.y=1+Math.sin(t*2.4)*.012};
+  scene.add(g);return g}
+let peng=null;
+function setSkin(k){if(peng)scene.remove(peng);peng=makeChar(k);try{localStorage.setItem("pg-skin2",k)}catch(e){}}
+// ---- input ----
+const keys={},inp={f:0,r:0};
+const pids={};
+function hold(id,prop,v){const b=$(id);b.addEventListener("pointerdown",e=>{e.preventDefault();inp[prop]=v;pids[prop]=e.pointerId});b.addEventListener("contextmenu",e=>e.preventDefault())}
+function stopAll(){inp.f=inp.r=0;for(const k in keys)keys[k]=0}
+["pointerup","pointercancel"].forEach(ev=>addEventListener(ev,e=>{for(const p of["f","r"])if(pids[p]===e.pointerId){inp[p]=0;pids[p]=null}}));
+["touchend","touchcancel"].forEach(ev=>addEventListener(ev,e=>{if(!e.touches.length)stopAll()}));
+["blur","pagehide"].forEach(ev=>addEventListener(ev,stopAll));
+document.addEventListener("visibilitychange",stopAll);
+addEventListener("focusin",()=>{for(const k in keys)keys[k]=0});
+hold("F","f",1);hold("B","f",-1);hold("L","r",-1);hold("R","r",1);
+const typing=e=>/INPUT|TEXTAREA|SELECT/.test((e.target&&e.target.tagName)||"");
+addEventListener("keydown",e=>{if(!typing(e))keys[e.key]=1});addEventListener("keyup",e=>{keys[e.key]=0});
+const ray=new T.Raycaster(),ndc=new T.Vector2();let dn=null;
+renderer.domElement.addEventListener("pointerdown",e=>{dn={x:e.clientX,y:e.clientY,t:performance.now()}});
+renderer.domElement.addEventListener("pointerup",e=>{
+  if(!dn)return;const ok=Math.hypot(e.clientX-dn.x,e.clientY-dn.y)<10&&performance.now()-dn.t<400;dn=null;if(!ok)return;
+  const r=renderer.domElement.getBoundingClientRect();ndc.set((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1);ray.setFromCamera(ndc,cam);
+  const hit=ray.intersectObjects((cur?roomHall:corridor).clk,false)[0];if(!hit)return;const u=hit.object.userData;
+  if(u.t==="frame")goTo(u.tx,u.z,()=>u.m?show(u.m):(isOwner&&openAdd()));else if(u.t==="door")goTo(u.tx,u.z);else goTo(200,2.2)});
+function goTo(x,z,cb){tgt={x,z,cb,t0:performance.now()}}
+// ---- rooms ----
+function fade(v){$("fade").style.opacity=v}
+function snapCam(){const fx=Math.sin(ang),fz=-Math.cos(ang);cam.position.set(P.x-fx*4.2,2.7,P.z-fz*4.2);cam.lookAt(P.x+fx*1.5,1,P.z+fz*1.5)}
+function enter(k){if(busy)return;busy=true;tgt=null;fade(1);setTimeout(()=>{cur=k;rebuild();P.set(200,0,-1);ang=0;snapCam();fade(0);busy=false;cool=performance.now()+1500},300)}
+function leave(){if(busy)return;busy=true;tgt=null;fade(1);const d=corridor.doors.find(d=>d.k===cur);setTimeout(()=>{cur=0;rebuild();P.set(d.side,0,d.z);ang=0;snapCam();fade(0);busy=false;cool=performance.now()+1500},300)}
+$("back").onclick=leave;
+// ---- loop ----
+let last=0;const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function frame(t){requestAnimationFrame(frame);if(!corridor)return;
+  const dt=Math.min(.05,(t-last)/1000||0);last=t;
+  let mv=(keys.ArrowUp||keys.w?1:0)-(keys.ArrowDown||keys.s?1:0)||inp.f,tr=(keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0)||inp.r;
+  if(mv||tr)tgt=null;
+  if(tgt&&!busy){const dx=tgt.x-P.x,dz=tgt.z-P.z;
+    if(Math.hypot(dx,dz)<.3||performance.now()>tgt.t0+9000){const cb=tgt.cb;tgt=null;if(cb)cb()}
+    else{let df=Math.atan2(dx,-dz)-ang;df=Math.atan2(Math.sin(df),Math.cos(df));const st=3.4*dt;ang+=Math.abs(df)<st?df:Math.sign(df)*st;if(Math.abs(df)<.6)mv=1;else if((tgt.rot=(tgt.rot||0)+dt)>2.5)tgt=null}}
+  if(busy)mv=tr=0;
+  ang+=tr*2*dt;const sp=mv*4*dt*(mv<0?.6:1);P.x+=Math.sin(ang)*sp;P.z-=Math.cos(ang)*sp;
+  const h=cur?roomHall:corridor,hw=h.W/2-.6;P.x=clamp(P.x,h.cx-hw,h.cx+hw);P.z=clamp(P.z,-h.L+.8,2.2);
+  if(!busy&&performance.now()>cool){
+    if(!cur){for(const d of corridor.doors)if(Math.abs(P.z-d.z)<.9&&d.side*P.x>2){tryEnter(d.k,d.side);break}}
+    else if(P.z>1.7&&Math.abs(P.x-200)<1.3)leave()}
+  const walking=mv||tg();phase+=dt*(walking?11:0);
+  peng.position.set(P.x,Math.abs(Math.sin(phase))*.07,P.z);dl.target.position.set(P.x,0,P.z);dl.position.set(P.x+2,6,P.z+3);peng.rotation.y=-ang;peng.b.rotation.z=Math.sin(phase)*.1;
+  peng.fl.forEach(f=>f.rotation.z=f.s*(.3+Math.sin(phase)*.5));peng.ft.forEach((f,i)=>f.position.z=-.1+Math.sin(phase+i*Math.PI)*.15);if(peng.tick)peng.tick(t/1000,dt,walking);
+  const fx=Math.sin(ang),fz=-Math.cos(ang),hw2=h.W/2-.35,k=1-Math.exp(-7*dt);
+  const tx=clamp(P.x-fx*4.2,h.cx-hw2,h.cx+hw2),tz=clamp(P.z-fz*4.2,-h.L+.4,2.6);
+  cam.position.x+=(tx-cam.position.x)*k;cam.position.z+=(tz-cam.position.z)*k;cam.position.y=2.7;
+  cam.lookAt(P.x+fx*1.5,1,P.z+fz*1.5);renderer.render(scene,cam)}
+function tg(){return !!tgt}
+// ---- viewer & add ----
+function show(m){const s=srcOf(m);
+  $("showBox").innerHTML=(m.kind==="image"?'<img src="'+s+'" alt="">':m.kind==="video"?'<video src="'+s+'" controls autoplay playsinline></video>':"")+"<p>"+esc(m.caption)+"</p><small>"+esc(fmt(m.date))+'</small><div class="row">'+(isOwner?'<button class="g" id="del">O‘chirish</button><button class="g" id="ed">✏️ Tahrirlash</button>':'')+'<button id="cl">Yopish</button></div>';
+  $("mShow").classList.add("on");$("cl").onclick=closeShow;if(isOwner)$("ed").onclick=()=>{closeShow();openAdd(m)};
+  if(isOwner)$("del").onclick=async()=>{if(confirm("Bu xotira yashirilsinmi? (Keyin ⚙ Eshiklar ichidan tiklash mumkin)")){closeShow();try{await dbx.doc("mem/"+m.id).update({deleted:true})}catch(e){alert("O‘chirib bo‘lmadi")}}}}
+function closeShow(){const v=$("showBox").querySelector("video");if(v)v.pause();$("showBox").innerHTML="";$("mShow").classList.remove("on")}
+$("mShow").onclick=e=>{if(e.target===$("mShow"))closeShow()};
+function fillRm(){$("rm").innerHTML='<option value="0">Qayerga: yo‘lak</option>'+Array.from({length:30},(_,i)=>'<option value="'+(i+1)+'">Qayerga: '+(i+1)+'-eshik'+(rooms[i+1]&&rooms[i+1].name?" ("+esc(rooms[i+1].name)+")":"")+'</option>').join("")}
+let editM=null;
+$("fr").innerHTML=Object.keys(FR).map(k=>'<option value="'+k+'">Ramka: '+FR[k][0]+'</option>').join("");
+function openAdd(m){editM=m||null;fillRm();$("f").value="";$("f").style.display=m?"none":"block";$("cap").value=m?m.caption||"":"";$("dt").value=m?m.date||"":"";$("rm").value=m?m.room||0:cur;$("fr").value=(m&&m.fr)||"yogoch";$("sz").value=(m&&m.sz)||1;$("addT").textContent=m?"Xotirani tahrirlash":"Yangi xotira";$("mAdd").classList.add("on")}
+$("add").onclick=()=>openAdd();$("cancel").onclick=()=>$("mAdd").classList.remove("on");
+function shrink(f){return new Promise(r=>{const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const s=Math.min(1,1400/Math.max(im.width,im.height)),c=cv(im.width*s,im.height*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);c.toBlob(b=>{URL.revokeObjectURL(u);r(b||f)},"image/jpeg",.82)};im.onerror=()=>{URL.revokeObjectURL(u);r(f)};im.src=u})}
+$("save").onclick=async()=>{
+  const files=[...$("f").files],caption=$("cap").value.trim(),date=$("dt").value,room=+$("rm").value;
+  if(!files.length&&!caption&&!editM){alert("Rasm, video tanlang yoki matn yozing.");return}
+  if(!dbx||!asset){alert("Ma‘lumotlar bazasiga ulanmagan.");return}
+  if(editM){$("save").disabled=true;try{await dbx.doc("mem/"+editM.id).update({caption,date,room,fr:$("fr").value,sz:+$("sz").value})}catch(e){alert("Saqlab bo‘lmadi")}$("save").disabled=false;$("mAdd").classList.remove("on");return}
+  $("save").disabled=true;let k=0,fail="";
+  for(const f of files.length?files:[null]){
+    try{const m={caption,date,room,kind:"text",fr:$("fr").value,sz:+$("sz").value};
+      if(f){m.kind=f.type.startsWith("video")?"video":"image";const r=await asset.upload(m.kind==="image"?await shrink(f):f);m.src=r.url;m.assetId=r.id}
+      await dbx.doc("mem/"+(Date.now()+k++)).set(m)}catch(e){fail=(e&&e.message)||"xato"}}
+  $("save").disabled=false;$("mAdd").classList.remove("on");if(fail)alert("Saqlab bo‘lmadi: "+fail)};
+// ---- skin ----
+for(const k in FV)SK[k]={n:FV[k].n};
+$("skinList").innerHTML=Object.keys(SK).map(k=>'<button class="g" data-s="'+k+'">'+SK[k].n+'</button>').join("");
+$("skin").onclick=()=>$("mSkin").classList.add("on");
+$("skinList").onclick=e=>{const k=e.target.dataset.s;if(k){setSkin(k);$("mSkin").classList.remove("on")}};
+$("mSkin").onclick=e=>{if(e.target===$("mSkin"))$("mSkin").classList.remove("on")};
+// ---- passwords ----
+let pwK=0;
+async function hp(k,v){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("pg:"+k+":"+v));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+function tryEnter(k,side){const r=rooms[k]||{};if(!r.pw)return enter(k);tgt=null;P.x=side;cool=performance.now()+2000;pwK=k;
+  $("pwT").textContent="🔒 "+k+"-eshik"+(r.name?": "+r.name:"");$("pwI").value="";$("pwE").textContent="";$("mPw").classList.add("on")}
+$("pwC").onclick=()=>$("mPw").classList.remove("on");
+
+$("pwI").onkeydown=e=>{if(e.key==="Enter")$("pwOk").click()};
+$("pwOk").onclick=async()=>{const r=rooms[pwK]||{},h=await hp(pwK,$("pwI").value.trim());
+  if(h===r.pw){$("mPw").classList.remove("on");enter(pwK)}else $("pwE").textContent="Parol noto‘g‘ri"};
+// ---- owner: doors setup ----
+$("cfg").onclick=()=>{let h="";for(let k=1;k<=30;k++){const r=rooms[k]||{};h+='<div class="row"><input data-n="'+k+'" value="'+esc(r.name||"")+'" placeholder="'+k+'-eshik: ism"><input data-p="'+k+'" placeholder="'+(r.pw?"🔒 yangi parol":"parol")+'"><button class="g" data-x="'+k+'" style="flex:0 0 44px;padding:8px 0">❌</button></div>'}$("cfgList").innerHTML=h;$("rst").textContent="♻ Tiklash ("+trash.length+")";$("mCfg").classList.add("on")};
+$("rst").onclick=async()=>{if(!trash.length||!confirm(trash.length+" ta yashirilgan xotira qaytarilsinmi?"))return;for(const m of trash.slice()){try{await dbx.doc("mem/"+m.id).update({deleted:false})}catch(e){}}};
+$("bak").onclick=async()=>{try{const d=await claude.use("downloads");if(!d){alert("Yuklab olish mavjud emas.");return}await d.save({filename:"xotira-zaxira.json",data:JSON.stringify({items:items.concat(trash),rooms},null,1)})}catch(e){}};
+$("cfgList").onclick=e=>{if(e.target.dataset.x){const b=e.target;b.dataset.d=b.dataset.d?"":"1";b.style.background=b.dataset.d?"#c1121f":""}};
+$("cfgC").onclick=()=>$("mCfg").classList.remove("on");
+$("cfgS").onclick=async()=>{$("cfgS").disabled=true;let bad=0;const q=s=>document.querySelector(s);
+  for(let k=1;k<=30;k++){const r=rooms[k]||{},n=q('[data-n="'+k+'"]').value.trim(),p=q('[data-p="'+k+'"]').value.trim();let pw=r.pw||"";
+    if(q('[data-x="'+k+'"]').dataset.d)pw="";else if(p)pw=await hp(k,p);
+    if(n!==(r.name||"")||pw!==(r.pw||"")){try{await dbx.doc("rooms/"+k).set({name:n,pw})}catch(e){bad++}}}
+  $("cfgS").disabled=false;$("mCfg").classList.remove("on");if(bad)alert(bad+" ta eshikni saqlab bo‘lmadi")};
+$("mig").onclick=async()=>{let n=0;for(const m of await dbAll()){try{const x={caption:m.caption||"",date:m.date||"",room:m.room||0,kind:m.kind||"text"};
+  if(m.blob){const r=await asset.upload(m.blob);x.src=r.url;x.assetId=r.id}else if(m.src)x.src=m.src;await dbx.doc("mem/"+m.id).set(x);n++}catch(e){}}alert(n+" ta xotira ko‘chirildi.")};
+// ---- start ----
+let st;const sched=()=>{clearTimeout(st);st=setTimeout(rebuild,250)};
+setSkin((()=>{try{return localStorage.getItem("pg-skin2")}catch(e){return null}})()||"momiq");
+rebuild();P.set(0,0,0);snapCam();requestAnimationFrame(frame);
+$("hint").textContent="Ulanmoqda…";
+$("hint").textContent="Ko‘rish rejimi. ▲ yurish, ◀ ▶ burilish, ramka yoki eshikka bosing";
+{const D=window.DATA||{rooms:{},items:[]};rooms=D.rooms||{};items=(D.items||[]).filter(x=>!x.deleted);rebuild()}
+setTimeout(()=>{$("hint").style.display="none"},10000);
+})();
+</script>
+</body>
+</html>
