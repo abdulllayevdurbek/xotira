@@ -17,7 +17,7 @@ canvas{display:block;touch-action:none}
 #F{right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 88px)}#B{right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px)}
 .pill{height:42px;border-radius:21px;padding:0 15px;font-size:15px;background:#e76f51}
 #add{top:calc(env(safe-area-inset-top,0px) + 10px);right:12px}
-#back{top:calc(env(safe-area-inset-top,0px) + 166px);right:12px;background:#3a4a75;display:none}#cfg{top:calc(env(safe-area-inset-top,0px) + 62px);right:12px;display:none;background:#3a4a75}#skin{top:calc(env(safe-area-inset-top,0px) + 114px);right:12px;background:#3a4a75}#add{display:none}.box .row input{margin:3px 0}
+#back{top:calc(env(safe-area-inset-top,0px) + 166px);right:12px;background:#3a4a75;display:none}#cfg{top:calc(env(safe-area-inset-top,0px) + 62px);right:12px;display:none;background:#3a4a75}#skin{top:calc(env(safe-area-inset-top,0px) + 114px);right:12px;background:#3a4a75}#add{display:none}#key{left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 14px);width:44px;height:44px;border-radius:50%;font-size:20px;opacity:.6}.box .row input{margin:3px 0}
 #where{top:calc(env(safe-area-inset-top,0px) + 14px);left:12px;font-size:14px;background:rgba(16,25,46,.72);padding:8px 13px;border-radius:18px}
 #hint{top:calc(env(safe-area-inset-top,0px) + 60px);left:12px;font-size:12px;background:rgba(16,25,46,.72);padding:6px 11px;border-radius:14px;max-width:55%}
 #fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .28s;z-index:40}
@@ -42,14 +42,17 @@ canvas{display:block;touch-action:none}
   <button class="ui btn pill" id="cfg">⚙ Eshiklar</button>
   <button class="ui btn pill" id="skin">🎨 Qahramon</button>
   <button class="ui btn pill" id="back">🚪 Yo‘lakka</button>
+  <button class="ui btn arr" id="key">🔑</button>
   <button class="ui btn arr" id="L">◀</button><button class="ui btn arr" id="R">▶</button>
   <button class="ui btn arr" id="F">▲</button><button class="ui btn arr" id="B">▼</button>
 </div>
 <div id="fade"></div>
 <div class="modal" id="mShow"><div class="box" id="showBox"></div></div>
+<div class="modal" id="mTk"><div class="box"><b>Admin kirishi</b><br><small>GitHub token (github_pat_… bilan boshlanadi) ni qo‘ying. U faqat shu qurilmada saqlanadi.</small><input id="tkI" type="password" placeholder="github_pat_..."><small id="tkE" style="color:#ffb4a2"></small><div class="row"><button class="g" id="tkC">Bekor</button><button id="tkOk">Kirish</button></div></div></div>
 <div class="modal" id="mPw"><div class="box"><b id="pwT"></b><input id="pwI" type="password" placeholder="Parol"><small id="pwE" style="color:#ffb4a2"></small><div class="row"><button class="g" id="pwC">Bekor</button><button id="pwOk">Kirish</button></div><div class="row" id="pwOr"></div></div></div>
-<div class="modal" id="mCfg"><div class="box"><b>Eshiklar: ism va parol</b><br><small>Parol bo‘sh qolsa o‘zgarmaydi. ❌ parolni olib tashlaydi.</small><div id="cfgList"></div><div class="row"><button class="g" id="rst">♻ Tiklash</button><button class="g" id="bak">💾 Zaxira nusxa</button></div><div class="row"><button class="g" id="mig" style="display:none">📥 Telefondagi eski xotiralarni ko‘chirish</button></div><div class="row"><button class="g" id="cfgC">Yopish</button><button id="cfgS">Saqlash</button></div></div></div>
-<div class="modal" id="mSkin"><div class="box"><b>Qahramonni tanlang</b><div class="row" id="skinList" style="flex-wrap:wrap"></div></div></div>
+<div class="modal" id="mCfg"><div class="box"><b>Eshiklar: ism va parol</b><br><small>Parol bo‘sh qolsa o‘zgarmaydi. ❌ parolni olib tashlaydi.</small><div class="row"><select id="lp"><option value="warm">Lampa: iliq sariq</option><option value="white">Oq</option><option value="pink">Pushti</option><option value="blue">Ko‘k</option><option value="green">Yashil</option><option value="off">O‘chiq</option></select><select id="lz"><option value="1">O‘lcham: oddiy</option><option value="0.7">Kichik</option><option value="1.6">Katta</option></select><select id="lg"><option value="7">Oraliq: oddiy</option><option value="4.5">Zich</option><option value="11">Siyrak</option></select></div>
+<div id="cfgList"></div><div class="row"><button class="g" id="rst">♻ Tiklash</button><button class="g" id="bak">💾 Zaxira nusxa</button></div><div class="row"><button class="g" id="mig" style="display:none">📥 Telefondagi eski xotiralarni ko‘chirish</button></div><div class="row"><button class="g" id="cfgC">Yopish</button><button id="cfgS">Saqlash</button></div></div></div>
+<div class="modal" id="mSkin"><div class="box"><b>Qahramonni tanlang</b><div class="row" id="skinList" style="flex-wrap:wrap"></div><small>Hayvoncha o‘lchami:</small><div class="row" id="sizeList"><button class="g" data-z=".5">Kichik</button><button class="g" data-z=".65">O‘rta</button><button class="g" data-z="1">Katta</button></div></div></div>
 <div class="modal" id="mAdd"><div class="box">
   <b id="addT">Yangi xotira</b>
   <input id="f" type="file" accept="image/*,video/*" multiple>
@@ -60,14 +63,14 @@ canvas{display:block;touch-action:none}
   <select id="sz"><option value="1">Ramka o‘lchami: oddiy</option><option value="1.25">Katta</option><option value="0.8">Kichik</option></select>
   <div class="row"><button class="g" id="cancel">Bekor</button><button id="save">Qo‘yish</button></div>
 </div></div>
-<script src="data.js"></script>
+<script>document.write('<script src="data.js?t='+Date.now()+'"><\/script>')</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>(()=>{
 const $=id=>document.getElementById(id);
 if(!window.THREE){document.body.innerHTML="<p style='padding:20px'>3D kutubxonasi yuklanmadi. Internetni tekshirib, sahifani qayta oching.</p>";throw 0}
 const T=THREE;
 let items=[],db=null,cur=0,urls=[],corridor=null,roomHall=null,busy=false,cool=0,tgt=null;
-let trash=[],dbx=null,asset=null,isOwner=false,rooms={},unl={};try{unl=JSON.parse(localStorage.getItem("pg-unl")||"{}")}catch(e){}
+let hallCfg={},trash=[],dbx=null,asset=null,isOwner=false,rooms={},unl={};try{unl=JSON.parse(localStorage.getItem("pg-unl")||"{}")}catch(e){}
 // ---- storage ----
 function openDB(){return new Promise(r=>{try{const q=indexedDB.open("pingvin-yolak",1);q.onupgradeneeded=()=>q.result.createObjectStore("m",{keyPath:"id"});q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)}catch(e){r(null)}})}
 function dbAll(){return new Promise(r=>{if(!db)return r([]);try{const q=db.transaction("m").objectStore("m").getAll();q.onsuccess=()=>r(q.result);q.onerror=()=>r([])}catch(e){r([])}})}
@@ -81,7 +84,7 @@ const view=$("view"),renderer=new T.WebGLRenderer({antialias:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));view.insertBefore(renderer.domElement,view.firstChild);
 const scene=new T.Scene();scene.background=new T.Color(0x10192e);scene.fog=new T.Fog(0x10192e,12,58);
 const cam=new T.PerspectiveCamera(65,1,.1,150);
-scene.add(new T.AmbientLight(0xffffff,.55));scene.add(new T.HemisphereLight(0xffffff,0x8a7a6a,.45));
+const amb=new T.AmbientLight(0xffffff,.55);scene.add(amb);scene.add(new T.HemisphereLight(0xffffff,0x8a7a6a,.45));
 const dl=new T.DirectionalLight(0xffffff,.7);dl.position.set(2,6,3);dl.castShadow=true;dl.shadow.mapSize.set(1024,1024);dl.shadow.bias=-.0005;
 const sc_=dl.shadow.camera;sc_.left=sc_.bottom=-5;sc_.right=sc_.top=5;sc_.near=1;sc_.far=20;sc_.updateProjectionMatrix();scene.add(dl);scene.add(dl.target);
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
@@ -106,7 +109,14 @@ function frameTex(m){
       v.addEventListener("loadeddata",d);v.addEventListener("seeked",d);v.src=srcOf(m)+"#t=0.3"}}
   cap(m&&m.kind==="text"?"":"");
   return tex}
-function doorTex(k,n){const c=cv(128,256),x=c.getContext("2d");x.fillStyle=n?"#2f7d4f":"hsl("+(k*47)%360+",35%,38%)";x.fillRect(0,0,128,256);x.strokeStyle="rgba(0,0,0,.35)";x.lineWidth=4;x.strokeRect(14,14,100,100);x.strokeRect(14,130,100,112);x.fillStyle="#f5d36a";x.beginPath();x.arc(104,150,7,0,7);x.fill();x.fillStyle="#fff";x.textAlign="center";x.font="bold 54px system-ui";x.fillText(k,64,85);if(n){x.font="22px system-ui";x.fillText("🖼 "+n,64,205)}return new T.CanvasTexture(c)}
+const LAMPS={warm:[0xfff1b8,0xfff4e0],white:[0xffffff,0xffffff],pink:[0xffbfdc,0xffe3f0],blue:[0xbfdfff,0xe3f0ff],green:[0xc4ffd0,0xe6ffe9],off:[0x383838,0xffffff]};
+function doorTex(k,n,r){const c=cv(128,256),x=c.getContext("2d"),col=r.color||(n?"#2f7d4f":"hsl("+(k*47)%360+",35%,38%)"),op=r.state==="ochiq";
+  if(op){const g=x.createLinearGradient(0,0,0,256);g.addColorStop(0,"#fff3b0");g.addColorStop(1,"#ffd166");x.fillStyle=g;x.fillRect(0,0,128,256);x.fillStyle=col;x.beginPath();x.moveTo(0,0);x.lineTo(44,16);x.lineTo(44,240);x.lineTo(0,256);x.fill()}
+  else{x.fillStyle=col;x.fillRect(0,0,128,256);x.strokeStyle="rgba(0,0,0,.35)";x.lineWidth=4;x.strokeRect(14,14,100,100);x.strokeRect(14,130,100,112);x.fillStyle="#f5d36a";x.beginPath();x.arc(104,150,7,0,7);x.fill()}
+  x.fillStyle=op?"#5a3a00":"#fff";x.textAlign="center";x.font="bold 54px system-ui";x.fillText(k,op?88:64,85);
+  if(n){x.font="22px system-ui";x.fillText("🖼 "+n,op?88:64,205)}
+  if(r.state==="yopiq"){x.fillStyle="rgba(0,0,0,.4)";x.fillRect(0,0,128,256);x.fillStyle="#f4c20d";x.fillRect(0,112,128,30);x.fillStyle="#111";x.font="bold 20px system-ui";x.fillText("🚧 YOPIQ",64,134)}
+  return new T.CanvasTexture(c)}
 // ---- halls ----
 function buildHall(cx,list,o){
   const g=new T.Group();g.position.x=cx;scene.add(g);
@@ -119,8 +129,8 @@ function buildHall(cx,list,o){
   add(new T.PlaneGeometry(len,H),mat(0xcfe3f5),W/2,H/2,zc,-Math.PI/2);
   add(new T.PlaneGeometry(W,H),mat(0xe8dcc0),0,H/2,3,Math.PI);
   add(new T.PlaneGeometry(W,H),mat(0xe8dcc0),0,H/2,-L,0);
-  const lamp=new T.MeshBasicMaterial({color:0xfff6d0});
-  for(let z=-3;z>-L;z-=7)add(new T.BoxGeometry(1.4,.06,.5),lamp,0,H-.03,z);
+  const lm=LAMPS[hallCfg.lamp]||LAMPS.warm,ls=hallCfg.lsz||1,lg=hallCfg.lgap||7,lamp=new T.MeshBasicMaterial({color:lm[0]});
+  for(let z=-3;z>-L;z-=lg)add(new T.BoxGeometry(1.4*ls,.06,.5*ls),lamp,0,H-.03,z);
   for(let i=0;i<n;i++){
     const m=list[i],side=i%2?1:-1,z=-(6+Math.floor(i/2)*5),fg=new T.Group();
     fg.position.set(side*(W/2-.08),1.9,z);fg.rotation.y=-side*Math.PI/2;
@@ -134,7 +144,7 @@ function buildHall(cx,list,o){
       const i=k-1,side=i%2?1:-1,z=-(dS+Math.floor(i/2)*3.4),dg=new T.Group();
       dg.position.set(side*(W/2-.08),1.35,z);dg.rotation.y=-side*Math.PI/2;
       dg.add(new T.Mesh(new T.BoxGeometry(1.9,2.8,.1),mat(0x3b2a1a)));
-      const dp=new T.Mesh(new T.PlaneGeometry(1.6,2.6),new T.MeshBasicMaterial({map:doorTex(k,by[k]||0)}));
+      const dp=new T.Mesh(new T.PlaneGeometry(1.6,2.6),new T.MeshBasicMaterial({map:doorTex(k,by[k]||0,rooms[k]||{})}));
       dp.position.z=.06;dp.userData={t:"door",k,side,z,tx:cx+side*2.3};dg.add(dp);
       const rn=rooms[k]||{},tx=(rn.pw?"🔒 ":"")+(rn.name||"—"),np=new T.Mesh(new T.PlaneGeometry(1.7,.5),new T.MeshBasicMaterial({map:signTex(tx,340,100,"#2a3b66","#ffd166",tx.length>11?32:44)}));np.position.set(0,1.75,.06);dg.add(np);g.add(dg);clk.push(dp);doors.push(dp.userData)}}
   if(o.exit){
@@ -143,6 +153,7 @@ function buildHall(cx,list,o){
   return{g,W,L,cx,clk,doors}}
 function disposeHall(h){scene.remove(h.g);h.g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){if(o.material.map)o.material.map.dispose();o.material.dispose()}})}
 function rebuild(){
+  {const lm=LAMPS[hallCfg.lamp]||LAMPS.warm;amb.color.set(lm[1]);amb.intensity=hallCfg.lamp==='off'?.28:.55}
   [corridor,roomHall].forEach(h=>h&&disposeHall(h));urls.forEach(u=>URL.revokeObjectURL(u));urls=[];
   items.sort((a,b)=>(a.date||"").localeCompare(b.date||"")||String(a.id).localeCompare(String(b.id)));
   corridor=buildHall(0,items.filter(m=>!m.room),{w:6,min:8,doors:true});
@@ -205,7 +216,7 @@ function makeFluffy(key){
     tl.rotation.y=Math.sin(t*(w?11:2.2))*(w?.45:.18);b.scale.y=1+Math.sin(t*2.4)*.012};
   scene.add(g);return g}
 let peng=null;
-function setSkin(k){if(peng)scene.remove(peng);peng=makeChar(k);try{localStorage.setItem("pg-skin2",k)}catch(e){}}
+function setSkin(k){if(peng)scene.remove(peng);peng=makeChar(k);peng.scale.setScalar(CS);try{localStorage.setItem("pg-skin2",k)}catch(e){}}
 // ---- input ----
 const keys={},inp={f:0,r:0};
 const pids={};
@@ -283,30 +294,40 @@ $("save").onclick=async()=>{
 // ---- skin ----
 for(const k in FV)SK[k]={n:FV[k].n};
 $("skinList").innerHTML=Object.keys(SK).map(k=>'<button class="g" data-s="'+k+'">'+SK[k].n+'</button>').join("");
+let CS=.65;try{CS=+localStorage.getItem("pg-size")||.65}catch(e){}
 $("skin").onclick=()=>$("mSkin").classList.add("on");
+$("sizeList").onclick=e=>{const z=+e.target.dataset.z;if(z){CS=z;try{localStorage.setItem("pg-size",z)}catch(x){}peng.scale.setScalar(CS)}};
 $("skinList").onclick=e=>{const k=e.target.dataset.s;if(k){setSkin(k);$("mSkin").classList.remove("on")}};
 $("mSkin").onclick=e=>{if(e.target===$("mSkin"))$("mSkin").classList.remove("on")};
 // ---- passwords ----
 let pwK=0;
 async function hp(k,v){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("pg:"+k+":"+v));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
-function tryEnter(k,side){const r=rooms[k]||{};if(!r.pw)return enter(k);tgt=null;P.x=side;cool=performance.now()+2000;pwK=k;
-  $("pwT").textContent="🔒 "+k+"-eshik"+(r.name?": "+r.name:"");$("pwI").value="";$("pwE").textContent="";$("mPw").classList.add("on")}
+function tryEnter(k,side){const r=rooms[k]||{};if(r.state==='yopiq'&&!isOwner){tgt=null;P.x=side;cool=performance.now()+2000;say('🚧 Bu xona hozircha yopiq');return}if(!r.pw)return enter(k);tgt=null;P.x=side;cool=performance.now()+2000;pwK=k;
+  $("pwT").textContent="🔒 "+k+"-eshik"+(r.name?": "+r.name:"");$("pwI").value="";$("pwE").textContent="";$("pwOr").innerHTML=isOwner?'<button class="g" id="pwO">Egasi sifatida parolsiz kirish</button>':"";if(isOwner)$("pwO").onclick=()=>{$("mPw").classList.remove("on");enter(pwK)};$("mPw").classList.add("on")}
 $("pwC").onclick=()=>$("mPw").classList.remove("on");
 
 $("pwI").onkeydown=e=>{if(e.key==="Enter")$("pwOk").click()};
 $("pwOk").onclick=async()=>{const r=rooms[pwK]||{},h=await hp(pwK,$("pwI").value.trim());
   if(h===r.pw){$("mPw").classList.remove("on");enter(pwK)}else $("pwE").textContent="Parol noto‘g‘ri"};
 // ---- owner: doors setup ----
-$("cfg").onclick=()=>{let h="";for(let k=1;k<=30;k++){const r=rooms[k]||{};h+='<div class="row"><input data-n="'+k+'" value="'+esc(r.name||"")+'" placeholder="'+k+'-eshik: ism"><input data-p="'+k+'" placeholder="'+(r.pw?"🔒 yangi parol":"parol")+'"><button class="g" data-x="'+k+'" style="flex:0 0 44px;padding:8px 0">❌</button></div>'}$("cfgList").innerHTML=h;$("rst").textContent="♻ Tiklash ("+trash.length+")";$("mCfg").classList.add("on")};
-$("rst").onclick=async()=>{if(!trash.length||!confirm(trash.length+" ta yashirilgan xotira qaytarilsinmi?"))return;for(const m of trash.slice()){try{await dbx.doc("mem/"+m.id).update({deleted:false})}catch(e){}}};
-$("bak").onclick=async()=>{try{const d=await claude.use("downloads");if(!d){alert("Yuklab olish mavjud emas.");return}await d.save({filename:"xotira-zaxira.json",data:JSON.stringify({items:items.concat(trash),rooms},null,1)})}catch(e){}};
+const COL=[["","Rang: avtomatik"],["#b23a48","Qizil"],["#3a6ea5","Ko‘k"],["#2f7d4f","Yashil"],["#c9892b","Oltin"],["#7b4fa3","Binafsha"],["#2a9d8f","Zangori"],["#d6609a","Pushti"],["#3b3b3b","Qora"],["#6b4a3a","Jigarrang"]],
+ STA=[["","Holat: oddiy"],["ochiq","Ochiq (nur chiqib turadi)"],["yopiq","Yopiq (hech kim kira olmaydi)"]],
+ opt=(a,v)=>a.map(o=>'<option value="'+o[0]+'"'+(o[0]===v?" selected":"")+'>'+o[1]+'</option>').join("");
+$("cfg").onclick=()=>{$("lp").value=hallCfg.lamp||"warm";$("lz").value=hallCfg.lsz||1;$("lg").value=hallCfg.lgap||7;
+  let h="";for(let k=1;k<=30;k++){const r=rooms[k]||{};
+    h+='<div style="border-top:1px solid #3a4a75;margin-top:8px;padding-top:4px"><div class="row"><input data-n="'+k+'" value="'+esc(r.name||"")+'" placeholder="'+k+'-eshik: ism"><input data-p="'+k+'" placeholder="'+(r.pw?"🔒 yangi parol":"parol")+'"><button class="g" data-x="'+k+'" style="flex:0 0 44px;padding:8px 0">❌</button></div><div class="row"><select data-c="'+k+'">'+opt(COL,r.color||"")+'</select><select data-t="'+k+'">'+opt(STA,r.state||"")+'</select></div></div>'}
+  $("cfgList").innerHTML=h;$("rst").textContent="♻ Tiklash ("+trash.length+")";$("mCfg").classList.add("on")};
+$("rst").onclick=async()=>{if(!trash.length||!confirm(trash.length+" ta yashirilgan xotira qaytarilsinmi?"))return;for(const m of trash.slice())await dbx.doc("mem/"+m.id).update({deleted:false})};
+$("bak").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,1)],{type:"application/json"}));a.download="xotira-zaxira.json";a.click()};
 $("cfgList").onclick=e=>{if(e.target.dataset.x){const b=e.target;b.dataset.d=b.dataset.d?"":"1";b.style.background=b.dataset.d?"#c1121f":""}};
 $("cfgC").onclick=()=>$("mCfg").classList.remove("on");
-$("cfgS").onclick=async()=>{$("cfgS").disabled=true;let bad=0;const q=s=>document.querySelector(s);
-  for(let k=1;k<=30;k++){const r=rooms[k]||{},n=q('[data-n="'+k+'"]').value.trim(),p=q('[data-p="'+k+'"]').value.trim();let pw=r.pw||"";
+$("cfgS").onclick=async()=>{$("cfgS").disabled=true;const q=s=>document.querySelector(s);
+  const hc={lamp:$("lp").value,lsz:+$("lz").value,lgap:+$("lg").value},h0={lamp:hallCfg.lamp||"warm",lsz:hallCfg.lsz||1,lgap:hallCfg.lgap||7};
+  if(JSON.stringify(hc)!==JSON.stringify(h0))await dbx.doc("cfg/hall").set(hc);
+  for(let k=1;k<=30;k++){const r=rooms[k]||{},n=q('[data-n="'+k+'"]').value.trim(),p=q('[data-p="'+k+'"]').value.trim(),c=q('[data-c="'+k+'"]').value,t2=q('[data-t="'+k+'"]').value;let pw=r.pw||"";
     if(q('[data-x="'+k+'"]').dataset.d)pw="";else if(p)pw=await hp(k,p);
-    if(n!==(r.name||"")||pw!==(r.pw||"")){try{await dbx.doc("rooms/"+k).set({name:n,pw})}catch(e){bad++}}}
-  $("cfgS").disabled=false;$("mCfg").classList.remove("on");if(bad)alert(bad+" ta eshikni saqlab bo‘lmadi")};
+    if(n!==(r.name||"")||pw!==(r.pw||"")||c!==(r.color||"")||t2!==(r.state||""))await dbx.doc("rooms/"+k).set({name:n,pw,color:c,state:t2})}
+  $("cfgS").disabled=false;$("mCfg").classList.remove("on")};
 $("mig").onclick=async()=>{let n=0;for(const m of await dbAll()){try{const x={caption:m.caption||"",date:m.date||"",room:m.room||0,kind:m.kind||"text"};
   if(m.blob){const r=await asset.upload(m.blob);x.src=r.url;x.assetId=r.id}else if(m.src)x.src=m.src;await dbx.doc("mem/"+m.id).set(x);n++}catch(e){}}alert(n+" ta xotira ko‘chirildi.")};
 // ---- start ----
@@ -314,8 +335,30 @@ let st;const sched=()=>{clearTimeout(st);st=setTimeout(rebuild,250)};
 setSkin((()=>{try{return localStorage.getItem("pg-skin2")}catch(e){return null}})()||"momiq");
 rebuild();P.set(0,0,0);snapCam();requestAnimationFrame(frame);
 $("hint").textContent="Ulanmoqda…";
-$("hint").textContent="Ko‘rish rejimi. ▲ yurish, ◀ ▶ burilish, ramka yoki eshikka bosing";
-{const D=window.DATA||{rooms:{},items:[]};rooms=D.rooms||{};items=(D.items||[]).filter(x=>!x.deleted);rebuild()}
+const D=window.DATA||{};D.rooms=D.rooms||{};D.items=D.items||[];D.cfg=D.cfg||{};
+const onGH=location.hostname.endsWith("github.io"),GO=onGH?location.hostname.split(".")[0]:"abdulllayevdurbek",GR=onGH?(location.pathname.split("/")[1]||"xotira"):"xotira";
+let TOKEN="",hT,qq=Promise.resolve(),ct;try{TOKEN=localStorage.getItem("gh-token")||""}catch(e){}
+function say(t){const h=$("hint");h.style.display="block";h.textContent=t;clearTimeout(hT);hT=setTimeout(()=>{h.style.display="none"},3500)}
+function sync(){rooms=D.rooms;items=D.items.filter(x=>!x.deleted);trash=D.items.filter(x=>x.deleted);hallCfg=D.cfg;sched()}
+async function gh(path,method,body){const r=await fetch("https://api.github.com/repos/"+GO+"/"+GR+"/contents/"+path+(method?"":"?ref=main&_="+Date.now()),{method:method||"GET",headers:{Authorization:"Bearer "+TOKEN,Accept:"application/vnd.github+json"},body:body?JSON.stringify(body):undefined});if(!r.ok)throw new Error(r.status);return r.json()}
+const b64=t=>btoa(unescape(encodeURIComponent(t)));
+function commit(){clearTimeout(ct);say("Saqlanmoqda…");ct=setTimeout(()=>{qq=qq.then(async()=>{const f=await gh("data.js");await gh("data.js","PUT",{message:"Yangilash",content:b64("window.DATA="+JSON.stringify(D,null,1)+";\n"),sha:f.sha});say("✅ GitHub’ga saqlandi. Boshqalarda 1–2 daqiqada ko‘rinadi.")}).catch(e=>say("❌ Saqlab bo‘lmadi ("+e.message+")"))},800)}
+async function loadFresh(){try{const f=await gh("data.js"),t=decodeURIComponent(escape(atob(f.content.replace(/\n/g,""))));const j=JSON.parse(t.replace(/^window\.DATA=/,"").replace(/;\s*$/,""));D.rooms=j.rooms||{};D.items=j.items||[];D.cfg=j.cfg||{};sync()}catch(e){if(String(e.message)==="401"){TOKEN="";try{localStorage.removeItem("gh-token")}catch(x){}isOwner=false;applyOwner()}}}
+dbx={doc(p){const[c,id]=p.split("/");return{
+  async set(o){if(c==="mem"){const m=Object.assign({id},o),i=D.items.findIndex(x=>x.id===id);if(i<0)D.items.push(m);else D.items[i]=m}else if(c==="rooms")D.rooms[id]=o;else if(c==="cfg")D.cfg=o;sync();commit()},
+  async update(o){const m=D.items.find(x=>x.id===id);if(m)Object.assign(m,o);sync();commit()},
+  async delete(){D.items=D.items.filter(x=>x.id!==id);sync();commit()}}}};
+asset={async upload(blob){const ext=(blob.type.split("/")[1]||"bin").replace("jpeg","jpg").replace("quicktime","mov").split("+")[0],id=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  const data=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result.split(",")[1]);fr.readAsDataURL(blob)});
+  say("Yuklanmoqda…");await gh("media/"+id+"."+ext,"PUT",{message:"Media",content:data});return{url:"media/"+id+"."+ext,id}},delete(){return Promise.resolve()}};
+function applyOwner(){$("add").style.display=$("cfg").style.display=isOwner?"block":"none";$("key").textContent=isOwner?"🔓":"🔑"}
+$("key").onclick=()=>{if(isOwner){if(confirm("Admin rejimidan chiqilsinmi?")){TOKEN="";try{localStorage.removeItem("gh-token")}catch(e){}isOwner=false;applyOwner()}return}$("tkI").value="";$("tkE").textContent="";$("mTk").classList.add("on")};
+$("tkC").onclick=()=>$("mTk").classList.remove("on");
+$("tkOk").onclick=async()=>{const t=$("tkI").value.trim();if(!t)return;TOKEN=t;$("tkE").textContent="Tekshirilmoqda…";
+  try{await gh("data.js");isOwner=true;try{localStorage.setItem("gh-token",t)}catch(e){}$("mTk").classList.remove("on");applyOwner();await loadFresh()}
+  catch(e){TOKEN="";$("tkE").textContent="Token noto‘g‘ri yoki ruxsati yetarli emas ("+e.message+")"}};
+isOwner=!!TOKEN;applyOwner();sync();rebuild();if(isOwner)loadFresh();
+$("hint").textContent=isOwner?"Admin rejimi: tahrirlash yoqilgan. ▲ yurish, ◀ ▶ burilish":"Ko‘rish rejimi. ▲ yurish, ◀ ▶ burilish, ramka yoki eshikka bosing";
 setTimeout(()=>{$("hint").style.display="none"},10000);
 })();
 </script>

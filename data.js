@@ -5,6 +5,7 @@ window.DATA={
    "pw": "ed2f5b9d2edbfc8e8ae15ce80203a82650aa4041db4961008c60ab7128e2d637"
   }
  },
+ "cfg": {},
  "items": [
   {
    "id": "1794976006765",
