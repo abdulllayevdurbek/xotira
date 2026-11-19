@@ -68,7 +68,9 @@ window.DATA={
   },
   "17": {
    "name": "Feruza",
-   "pw": "c0117559d2ac59a7b3ec4e7ac31d234ea17bc2a08dd2eae3ebb58fdc823e7539"
+   "pw": "c0117559d2ac59a7b3ec4e7ac31d234ea17bc2a08dd2eae3ebb58fdc823e7539",
+   "color": "#b23a48",
+   "state": ""
   },
   "18": {
    "name": "Botirjon",
