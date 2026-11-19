@@ -247,6 +247,17 @@ window.DATA={
    "sz": 1.25,
    "src": "media/mwn81y65zrpb.jpg",
    "assetId": "mwn81y65zrpb"
+  },
+  {
+   "id": "1795101505293",
+   "caption": "",
+   "date": "",
+   "room": 1,
+   "kind": "image",
+   "fr": "oltin",
+   "sz": 1.25,
+   "src": "media/mwnp2vj5dxpe.jpg",
+   "assetId": "mwnp2vj5dxpe"
   }
  ],
  "adm": {
