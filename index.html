@@ -17,7 +17,7 @@ canvas{display:block;touch-action:none}
 #F{right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 88px)}#B{right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px)}
 .pill{height:42px;border-radius:21px;padding:0 15px;font-size:15px;background:#e76f51}
 #add{top:calc(env(safe-area-inset-top,0px) + 10px);right:12px}
-#back{top:calc(env(safe-area-inset-top,0px) + 166px);right:12px;background:#3a4a75;display:none}#cfg{top:calc(env(safe-area-inset-top,0px) + 62px);right:12px;display:none;background:#3a4a75}#skin{top:calc(env(safe-area-inset-top,0px) + 114px);right:12px;background:#3a4a75}#add{display:none}#key{left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 14px);width:44px;height:44px;border-radius:50%;font-size:20px;opacity:.6}.box .row input{margin:3px 0}
+#back{top:calc(env(safe-area-inset-top,0px) + 166px);right:12px;background:#3a4a75;display:none}#cfg{top:calc(env(safe-area-inset-top,0px) + 62px);right:12px;display:none;background:#3a4a75}#skin{top:calc(env(safe-area-inset-top,0px) + 114px);right:12px;background:#3a4a75}#add{display:none}#toD{top:calc(env(safe-area-inset-top,0px) + 104px);left:12px;background:#3a4a75}#err{left:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);max-width:70%;font-size:12px;background:rgba(160,30,30,.9);padding:6px 10px;border-radius:12px;display:none}#key{left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 14px);width:44px;height:44px;border-radius:50%;font-size:20px;opacity:.6}.box .row input{margin:3px 0}
 #where{top:calc(env(safe-area-inset-top,0px) + 14px);left:12px;font-size:14px;background:rgba(16,25,46,.72);padding:8px 13px;border-radius:18px}
 #hint{top:calc(env(safe-area-inset-top,0px) + 60px);left:12px;font-size:12px;background:rgba(16,25,46,.72);padding:6px 11px;border-radius:14px;max-width:55%}
 #fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .28s;z-index:40}
@@ -37,10 +37,12 @@ canvas{display:block;touch-action:none}
 <body>
 <div id="view">
   <div class="ui" id="where">Yo‘lak</div>
+  <div class="ui" id="err"></div>
   <div class="ui" id="hint">▲ yurish, ◀ ▶ burilish. Ramka yoki eshikka bossangiz, pingvin o‘zi boradi</div>
   <button class="ui btn pill" id="add">＋ Xotira</button>
   <button class="ui btn pill" id="cfg">⚙ Eshiklar</button>
   <button class="ui btn pill" id="skin">🎨 Qahramon</button>
+  <button class="ui btn pill" id="toD">🚪 Eshiklarga</button>
   <button class="ui btn pill" id="back">🚪 Yo‘lakka</button>
   <button class="ui btn arr" id="key">🔑</button>
   <button class="ui btn arr" id="L">◀</button><button class="ui btn arr" id="R">▶</button>
@@ -48,10 +50,10 @@ canvas{display:block;touch-action:none}
 </div>
 <div id="fade"></div>
 <div class="modal" id="mShow"><div class="box" id="showBox"></div></div>
-<div class="modal" id="mTk"><div class="box"><b>Admin kirishi</b><br><small>GitHub token (github_pat_… bilan boshlanadi) ni qo‘ying. U faqat shu qurilmada saqlanadi.</small><input id="tkI" type="password" placeholder="github_pat_..."><small id="tkE" style="color:#ffb4a2"></small><div class="row"><button class="g" id="tkC">Bekor</button><button id="tkOk">Kirish</button></div></div></div>
+<div class="modal" id="mTk"><div class="box"><b id="tkT">Admin kirishi</b><br><small id="tkS"></small><input id="tkI" type="password" placeholder="GitHub token (github_pat_...)"><input id="pwA" type="password" placeholder="Admin parol"><input id="pwB" type="password" placeholder="Parolni takrorlang"><small id="tkE" style="color:#ffb4a2"></small><div class="row"><button class="g" id="tkC">Bekor</button><button id="tkOk">Kirish</button></div></div></div>
 <div class="modal" id="mPw"><div class="box"><b id="pwT"></b><input id="pwI" type="password" placeholder="Parol"><small id="pwE" style="color:#ffb4a2"></small><div class="row"><button class="g" id="pwC">Bekor</button><button id="pwOk">Kirish</button></div><div class="row" id="pwOr"></div></div></div>
 <div class="modal" id="mCfg"><div class="box"><b>Eshiklar: ism va parol</b><br><small>Parol bo‘sh qolsa o‘zgarmaydi. ❌ parolni olib tashlaydi.</small><div class="row"><select id="lp"><option value="warm">Lampa: iliq sariq</option><option value="white">Oq</option><option value="pink">Pushti</option><option value="blue">Ko‘k</option><option value="green">Yashil</option><option value="off">O‘chiq</option></select><select id="lz"><option value="1">O‘lcham: oddiy</option><option value="0.7">Kichik</option><option value="1.6">Katta</option></select><select id="lg"><option value="7">Oraliq: oddiy</option><option value="4.5">Zich</option><option value="11">Siyrak</option></select></div>
-<div id="cfgList"></div><div class="row"><button class="g" id="rst">♻ Tiklash</button><button class="g" id="bak">💾 Zaxira nusxa</button></div><div class="row"><button class="g" id="mig" style="display:none">📥 Telefondagi eski xotiralarni ko‘chirish</button></div><div class="row"><button class="g" id="cfgC">Yopish</button><button id="cfgS">Saqlash</button></div></div></div>
+<div id="cfgList"></div><div class="row"><button class="g" id="rst">♻ Tiklash</button><button class="g" id="bak">💾 Zaxira nusxa</button><button class="g" id="chpw">🔑 Parol</button></div><div class="row"><button class="g" id="mig" style="display:none">📥 Telefondagi eski xotiralarni ko‘chirish</button></div><div class="row"><button class="g" id="cfgC">Yopish</button><button id="cfgS">Saqlash</button></div></div></div>
 <div class="modal" id="mSkin"><div class="box"><b>Qahramonni tanlang</b><div class="row" id="skinList" style="flex-wrap:wrap"></div><small>Hayvoncha o‘lchami:</small><div class="row" id="sizeList"><button class="g" data-z=".5">Kichik</button><button class="g" data-z=".65">O‘rta</button><button class="g" data-z="1">Katta</button></div></div></div>
 <div class="modal" id="mAdd"><div class="box">
   <b id="addT">Yangi xotira</b>
@@ -76,14 +78,15 @@ function openDB(){return new Promise(r=>{try{const q=indexedDB.open("pingvin-yol
 function dbAll(){return new Promise(r=>{if(!db)return r([]);try{const q=db.transaction("m").objectStore("m").getAll();q.onsuccess=()=>r(q.result);q.onerror=()=>r([])}catch(e){r([])}})}
 function dbPut(m){return new Promise(r=>{if(!db)return r(false);try{const t=db.transaction("m","readwrite");t.objectStore("m").put(m);t.oncomplete=()=>r(true);t.onerror=()=>r(false)}catch(e){r(false)}})}
 function dbDel(id){return new Promise(r=>{if(!db)return r();try{const t=db.transaction("m","readwrite");t.objectStore("m").delete(id);t.oncomplete=()=>r()}catch(e){r()}})}
-function srcOf(m){if(m.src)return m.src;if(m.blob){const u=URL.createObjectURL(m.blob);urls.push(u);return u}return""}
+const LOCAL={};
+function srcOf(m){if(m.src)return LOCAL[m.src]||m.src;if(m.blob){const u=URL.createObjectURL(m.blob);urls.push(u);return u}return""}
 const esc=s=>String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt=d=>{const x=new Date(d);return d&&!isNaN(x)?x.toLocaleDateString("uz-UZ",{year:"numeric",month:"long",day:"numeric"}):""};
 // ---- three setup ----
 const view=$("view"),renderer=new T.WebGLRenderer({antialias:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));view.insertBefore(renderer.domElement,view.firstChild);
-const scene=new T.Scene();scene.background=new T.Color(0x10192e);scene.fog=new T.Fog(0x10192e,12,58);
-const cam=new T.PerspectiveCamera(65,1,.1,150);
+const scene=new T.Scene();scene.background=new T.Color(0x10192e);scene.fog=new T.Fog(0x10192e,70,300);
+const cam=new T.PerspectiveCamera(65,1,.1,320);
 const amb=new T.AmbientLight(0xffffff,.55);scene.add(amb);scene.add(new T.HemisphereLight(0xffffff,0x8a7a6a,.45));
 const dl=new T.DirectionalLight(0xffffff,.7);dl.position.set(2,6,3);dl.castShadow=true;dl.shadow.mapSize.set(1024,1024);dl.shadow.bias=-.0005;
 const sc_=dl.shadow.camera;sc_.left=sc_.bottom=-5;sc_.right=sc_.top=5;sc_.near=1;sc_.far=20;sc_.updateProjectionMatrix();scene.add(dl);scene.add(dl.target);
@@ -100,13 +103,13 @@ function frameTex(m){
   const cover=(s,w,h)=>{const k=Math.max(512/w,384/h);x.drawImage(s,(512-w*k)/2,(384-h*k)/2,w*k,h*k)};
   if(!m){x.fillStyle="#e9e2d0";x.fillRect(0,0,512,384);x.strokeStyle="#8a7a5a";x.lineWidth=6;x.setLineDash([22,16]);x.strokeRect(20,20,472,344);x.fillStyle="#8a7a5a";x.textAlign="center";x.textBaseline="alphabetic";x.font="bold 150px system-ui";x.fillText("+",256,230);x.font="28px system-ui";x.fillText("Xotira qo‘shing",256,320)}
   else if(m.kind==="text"){x.fillStyle="#fff6d8";x.fillRect(0,0,512,384);x.fillStyle="#3a2a10";x.font="28px Georgia,serif";x.textAlign="left";x.textBaseline="alphabetic";wrap(x,m.caption,28,64,456,36,9)}
-  else{x.fillStyle="#333";x.fillRect(0,0,512,384);
+  else{x.fillStyle="#8d8372";x.fillRect(0,0,512,384);x.fillStyle="#fff";x.font="bold 34px system-ui";x.textAlign="center";x.fillText("Yuklanmoqda…",256,200);
     const badge=()=>{if(m.kind!=="video")return;x.fillStyle="rgba(0,0,0,.5)";x.beginPath();x.arc(256,170,48,0,7);x.fill();x.fillStyle="#fff";x.beginPath();x.moveTo(240,145);x.lineTo(240,195);x.lineTo(282,170);x.fill()};
     badge();done();
-    if(m.kind==="image"){const im=new Image();im.onload=()=>{cover(im,im.width,im.height);cap(m.caption);done()};im.src=srcOf(m)}
+    if(m.kind==="image"){const im=new Image(),u0=srcOf(m);let tr=0;im.onload=()=>{cover(im,im.width,im.height);cap(m.caption);done()};im.onerror=()=>{showErr("⚠ Rasm topilmadi: "+u0.split("/").pop()+" (GitHub’da yo‘q yoki hali yangilanmagan)");if(tr++<8)setTimeout(()=>{im.src=u0+(u0.startsWith("blob:")?"":"?r="+Date.now())},20000)};im.src=u0}
     else{const v=document.createElement("video");v.muted=true;v.playsInline=true;v.preload="auto";
       const d=()=>{if(v.videoWidth){cover(v,v.videoWidth,v.videoHeight);badge();cap(m.caption);done()}};
-      v.addEventListener("loadeddata",d);v.addEventListener("seeked",d);v.src=srcOf(m)+"#t=0.3"}}
+      const u0=srcOf(m);let tr=0;v.addEventListener("loadeddata",d);v.addEventListener("seeked",d);v.addEventListener("error",()=>{if(tr++<8)setTimeout(()=>{v.src=u0+(u0.startsWith("blob:")?"":"?r="+Date.now())+"#t=0.3"},20000)});v.src=u0+"#t=0.3"}}
   cap(m&&m.kind==="text"?"":"");
   return tex}
 const LAMPS={warm:[0xfff1b8,0xfff4e0],white:[0xffffff,0xffffff],pink:[0xffbfdc,0xffe3f0],blue:[0xbfdfff,0xe3f0ff],green:[0xc4ffd0,0xe6ffe9],off:[0x383838,0xffffff]};
@@ -150,7 +153,7 @@ function buildHall(cx,list,o){
   if(o.exit){
     const ex=add(new T.PlaneGeometry(1.8,2.6),new T.MeshBasicMaterial({map:signTex("🚪 Chiqish",180,260,"#5b3a1a","#fff",34)}),0,1.3,2.94,Math.PI);
     ex.userData={t:"exit"};clk.push(ex)}
-  return{g,W,L,cx,clk,doors}}
+  return{g,W,L,cx,clk,doors,dS}}
 function disposeHall(h){scene.remove(h.g);h.g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){if(o.material.map)o.material.map.dispose();o.material.dispose()}})}
 function rebuild(){
   {const lm=LAMPS[hallCfg.lamp]||LAMPS.warm;amb.color.set(lm[1]);amb.intensity=hallCfg.lamp==='off'?.28:.55}
@@ -158,7 +161,7 @@ function rebuild(){
   items.sort((a,b)=>(a.date||"").localeCompare(b.date||"")||String(a.id).localeCompare(String(b.id)));
   corridor=buildHall(0,items.filter(m=>!m.room),{w:6,min:8,doors:true});
   roomHall=cur?buildHall(200,items.filter(m=>m.room===cur),{w:8,min:6,exit:true}):null;
-  $("where").textContent=cur?(rooms[cur]&&rooms[cur].name||cur+"-xona"):"Yo‘lak";$("back").style.display=cur?"block":"none"}
+  $("where").textContent=cur?(rooms[cur]&&rooms[cur].name||cur+"-xona"):"Yo‘lak";$("back").style.display=cur?"block":"none";$("toD").style.display=cur?"none":"block"}
 // ---- penguin ----
 const P=new T.Vector3(0,0,0);let ang=0,phase=0;
 const FR={yogoch:["Yog‘och",0x8a5a2b,.15],qalin:["Qalin yog‘och",0x5a3a1c,.32],oltin:["Oltin",0xd4af37,.2],qora:["Qora",0x151515,.12],oq:["Oq",0xf5f5f5,.15],pushti:["Pushti",0xf28cb1,.18],kok:["Ko‘k",0x3a86ff,.15],yashil:["Yashil",0x2a9d8f,.15]};
@@ -244,6 +247,7 @@ function snapCam(){const fx=Math.sin(ang),fz=-Math.cos(ang);cam.position.set(P.x
 function enter(k){if(busy)return;busy=true;tgt=null;fade(1);setTimeout(()=>{cur=k;rebuild();P.set(200,0,-1);ang=0;snapCam();fade(0);busy=false;cool=performance.now()+1500},300)}
 function leave(){if(busy)return;busy=true;tgt=null;fade(1);const d=corridor.doors.find(d=>d.k===cur);setTimeout(()=>{cur=0;rebuild();P.set(d.side,0,d.z);ang=0;snapCam();fade(0);busy=false;cool=performance.now()+1500},300)}
 $("back").onclick=leave;
+$("toD").onclick=()=>{if(cur||!corridor)return;tgt=null;P.set(0,0,-(corridor.dS-3));ang=0;snapCam()};
 // ---- loop ----
 let last=0;const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function frame(t){requestAnimationFrame(frame);if(!corridor)return;
@@ -337,26 +341,45 @@ rebuild();P.set(0,0,0);snapCam();requestAnimationFrame(frame);
 $("hint").textContent="Ulanmoqda…";
 const D=window.DATA||{};D.rooms=D.rooms||{};D.items=D.items||[];D.cfg=D.cfg||{};
 const onGH=location.hostname.endsWith("github.io"),GO=onGH?location.hostname.split(".")[0]:"abdulllayevdurbek",GR=onGH?(location.pathname.split("/")[1]||"xotira"):"xotira";
-let TOKEN="",hT,qq=Promise.resolve(),ct;try{TOKEN=localStorage.getItem("gh-token")||""}catch(e){}
+function showErr(t){const d=$("err");d.style.display="block";d.textContent=t}
+addEventListener("error",e=>showErr("⚠ Xato: "+(e.message||"noma’lum")+(e.lineno?" (qator "+e.lineno+")":"")));
+addEventListener("unhandledrejection",e=>showErr("⚠ Xato: "+((e.reason&&e.reason.message)||e.reason)));
+let TOKEN="",hT,qq=Promise.resolve(),ct;try{TOKEN=sessionStorage.getItem("gh-token")||""}catch(e){}
 function say(t){const h=$("hint");h.style.display="block";h.textContent=t;clearTimeout(hT);hT=setTimeout(()=>{h.style.display="none"},3500)}
 function sync(){rooms=D.rooms;items=D.items.filter(x=>!x.deleted);trash=D.items.filter(x=>x.deleted);hallCfg=D.cfg;sched()}
 async function gh(path,method,body){const r=await fetch("https://api.github.com/repos/"+GO+"/"+GR+"/contents/"+path+(method?"":"?ref=main&_="+Date.now()),{method:method||"GET",headers:{Authorization:"Bearer "+TOKEN,Accept:"application/vnd.github+json"},body:body?JSON.stringify(body):undefined});if(!r.ok)throw new Error(r.status);return r.json()}
 const b64=t=>btoa(unescape(encodeURIComponent(t)));
 function commit(){clearTimeout(ct);say("Saqlanmoqda…");ct=setTimeout(()=>{qq=qq.then(async()=>{const f=await gh("data.js");await gh("data.js","PUT",{message:"Yangilash",content:b64("window.DATA="+JSON.stringify(D,null,1)+";\n"),sha:f.sha});say("✅ GitHub’ga saqlandi. Boshqalarda 1–2 daqiqada ko‘rinadi.")}).catch(e=>say("❌ Saqlab bo‘lmadi ("+e.message+")"))},800)}
-async function loadFresh(){try{const f=await gh("data.js"),t=decodeURIComponent(escape(atob(f.content.replace(/\n/g,""))));const j=JSON.parse(t.replace(/^window\.DATA=/,"").replace(/;\s*$/,""));D.rooms=j.rooms||{};D.items=j.items||[];D.cfg=j.cfg||{};sync()}catch(e){if(String(e.message)==="401"){TOKEN="";try{localStorage.removeItem("gh-token")}catch(x){}isOwner=false;applyOwner()}}}
+async function loadFresh(){try{const f=await gh("data.js"),t=decodeURIComponent(escape(atob(f.content.replace(/\n/g,""))));const j=JSON.parse(t.replace(/^window\.DATA=/,"").replace(/;\s*$/,""));D.rooms=j.rooms||{};D.items=j.items||[];D.cfg=j.cfg||{};D.adm=j.adm;sync()}catch(e){if(String(e.message)==="401"){TOKEN="";try{sessionStorage.removeItem("gh-token")}catch(x){}isOwner=false;applyOwner()}}}
 dbx={doc(p){const[c,id]=p.split("/");return{
   async set(o){if(c==="mem"){const m=Object.assign({id},o),i=D.items.findIndex(x=>x.id===id);if(i<0)D.items.push(m);else D.items[i]=m}else if(c==="rooms")D.rooms[id]=o;else if(c==="cfg")D.cfg=o;sync();commit()},
   async update(o){const m=D.items.find(x=>x.id===id);if(m)Object.assign(m,o);sync();commit()},
   async delete(){D.items=D.items.filter(x=>x.id!==id);sync();commit()}}}};
 asset={async upload(blob){const ext=(blob.type.split("/")[1]||"bin").replace("jpeg","jpg").replace("quicktime","mov").split("+")[0],id=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   const data=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result.split(",")[1]);fr.readAsDataURL(blob)});
-  say("Yuklanmoqda…");await gh("media/"+id+"."+ext,"PUT",{message:"Media",content:data});return{url:"media/"+id+"."+ext,id}},delete(){return Promise.resolve()}};
+  const path="media/"+id+"."+ext;say("Yuklanmoqda…");await gh(path,"PUT",{message:"Media",content:data});LOCAL[path]=URL.createObjectURL(blob);return{url:path,id}},delete(){return Promise.resolve()}};
 function applyOwner(){$("add").style.display=$("cfg").style.display=isOwner?"block":"none";$("key").textContent=isOwner?"🔓":"🔑"}
-$("key").onclick=()=>{if(isOwner){if(confirm("Admin rejimidan chiqilsinmi?")){TOKEN="";try{localStorage.removeItem("gh-token")}catch(e){}isOwner=false;applyOwner()}return}$("tkI").value="";$("tkE").textContent="";$("mTk").classList.add("on")};
+const enc=new TextEncoder(),tb=a=>btoa(String.fromCharCode(...new Uint8Array(a))),fb=t=>Uint8Array.from(atob(t),c=>c.charCodeAt(0));
+async function dk(pw,salt,it){const k=await crypto.subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveKey"]);return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:it,hash:"SHA-256"},k,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
+async function seal(tok,pw){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),n=300000,key=await dk(pw,salt,n),ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,enc.encode(tok));return{s:tb(salt),i:tb(iv),c:tb(ct),n}}
+async function unseal(a,pw){const key=await dk(pw,fb(a.s),a.n);return new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:fb(a.i)},key,fb(a.c)))}
+function logout(){TOKEN="";try{sessionStorage.removeItem("gh-token")}catch(e){}isOwner=false;applyOwner()}
+$("key").onclick=()=>{if(isOwner){if(confirm("Admin rejimidan chiqilsinmi?"))logout();return}
+  const first=!D.adm;$("tkT").textContent=first?"Admin parolini o‘rnatish":"Admin kirishi";
+  $("tkS").textContent=first?"Bir marta: GitHub token va o‘zingiz o‘ylab topgan yangi parolni kiriting. Keyin faqat parol kerak bo‘ladi.":"Admin parolini kiriting.";
+  $("tkI").style.display=$("pwB").style.display=first?"block":"none";$("tkI").value=$("pwA").value=$("pwB").value="";$("tkE").textContent="";$("mTk").classList.add("on")};
 $("tkC").onclick=()=>$("mTk").classList.remove("on");
-$("tkOk").onclick=async()=>{const t=$("tkI").value.trim();if(!t)return;TOKEN=t;$("tkE").textContent="Tekshirilmoqda…";
-  try{await gh("data.js");isOwner=true;try{localStorage.setItem("gh-token",t)}catch(e){}$("mTk").classList.remove("on");applyOwner();await loadFresh()}
-  catch(e){TOKEN="";$("tkE").textContent="Token noto‘g‘ri yoki ruxsati yetarli emas ("+e.message+")"}};
+$("tkOk").onclick=async()=>{const first=!D.adm,pw=$("pwA").value;if(!pw)return;$("tkE").textContent="Tekshirilmoqda…";
+  try{
+    if(first){const t=$("tkI").value.trim();if(!t){$("tkE").textContent="Tokenni kiriting";return}
+      if(pw.length<8){$("tkE").textContent="Parol kamida 8 belgi bo‘lsin";return}
+      if(pw!==$("pwB").value){$("tkE").textContent="Ikkala parol bir xil emas";return}
+      TOKEN=t;await gh("data.js");D.adm=await seal(t,pw);isOwner=true;commit()}
+    else{TOKEN=await unseal(D.adm,pw);await gh("data.js");isOwner=true}
+    try{sessionStorage.setItem("gh-token",TOKEN)}catch(e){}
+    $("mTk").classList.remove("on");applyOwner();if(!first)await loadFresh()}
+  catch(e){TOKEN="";isOwner=false;$("tkE").textContent=first?"Token noto‘g‘ri yoki ruxsati yetarli emas ("+e.message+")":"Parol noto‘g‘ri"}};
+$("chpw").onclick=async()=>{const pw=prompt("Yangi admin parol (kamida 8 belgi):");if(!pw)return;if(pw.length<8){alert("Parol kamida 8 belgi bo‘lsin");return}D.adm=await seal(TOKEN,pw);commit()};
 isOwner=!!TOKEN;applyOwner();sync();rebuild();if(isOwner)loadFresh();
 $("hint").textContent=isOwner?"Admin rejimi: tahrirlash yoqilgan. ▲ yurish, ◀ ▶ burilish":"Ko‘rish rejimi. ▲ yurish, ◀ ▶ burilish, ramka yoki eshikka bosing";
 setTimeout(()=>{$("hint").style.display="none"},10000);
