@@ -218,6 +218,17 @@ window.DATA={
    "room": 0,
    "src": "media/e4b1421983a9225b864582b981224d59.jpg",
    "sz": 1.25
+  },
+  {
+   "id": "1795071691511",
+   "caption": "",
+   "date": "",
+   "room": 0,
+   "kind": "video",
+   "fr": "oltin",
+   "sz": 1.25,
+   "src": "media/mwn7c2t58f9v.mov",
+   "assetId": "mwn7c2t58f9v"
   }
  ],
  "adm": {
