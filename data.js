@@ -125,7 +125,8 @@ window.DATA={
    "kind": "image",
    "room": 0,
    "src": "media/fa7037d344d01cfa59ef1d220e0d89a3.jpg",
-   "sz": 1.25
+   "sz": 1.25,
+   "deleted": true
   },
   {
    "id": "1794981007518",
