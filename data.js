@@ -78,7 +78,9 @@ window.DATA={
   },
   "19": {
    "name": "Fayziniso",
-   "pw": "837fc5baa6e140ce4b5377f6184b96c63ec4430785683d41584ee2b710888f18"
+   "pw": "138159696be6babe0db9bca63d2b2a8e3e436b9d86849ed98dfcc3680275f0ff",
+   "color": "",
+   "state": ""
   },
   "20": {
    "name": "Mubina",
