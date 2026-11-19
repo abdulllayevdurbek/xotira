@@ -4,7 +4,7 @@ window.DATA={
    "name": "Durbek",
    "pw": "ed2f5b9d2edbfc8e8ae15ce80203a82650aa4041db4961008c60ab7128e2d637",
    "color": "#3b3b3b",
-   "state": "ochiq"
+   "state": "yopiq"
   },
   "2": {
    "name": "Nuriddin",
