@@ -211,7 +211,8 @@ window.DATA={
    "kind": "image",
    "room": 0,
    "src": "media/a6f599c306de41d2bbc3c0b2efc41d24.jpg",
-   "sz": 1.25
+   "sz": 1.25,
+   "deleted": true
   },
   {
    "id": "1794986437868",
