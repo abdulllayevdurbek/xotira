@@ -4,6 +4,38 @@ window.DATA={
    "name": "Durbek",
    "pw": "ed2f5b9d2edbfc8e8ae15ce80203a82650aa4041db4961008c60ab7128e2d637"
   },
+  "2": {
+   "name": "Nuriddin",
+   "pw": ""
+  },
+  "3": {
+   "name": "Hazratshoh",
+   "pw": "eaacede5446a8d82313258eac9b6b757c16f86954c672fe995b8816fd9df7144"
+  },
+  "4": {
+   "name": "Barkamolbek",
+   "pw": "7a68761095bb3492e45657dd5c88d6084c763bd7e378ef52d51ae0316c52ac95"
+  },
+  "5": {
+   "name": "Hayotbek",
+   "pw": "071445a0bf37a273b5c1c9d68eff09f1e9cb641be8e88709f983c3d309b74ec5"
+  },
+  "6": {
+   "name": "Vasliddin",
+   "pw": "9e72e768fc972ab55213a92a0519abacca5ee29dec5ab76eea862f558606cf81"
+  },
+  "7": {
+   "name": "Umarbek",
+   "pw": "9146e426107a45914fcb4bffe6de5985fa5a0e604275470739c209b111794e8c"
+  },
+  "8": {
+   "name": "Asilbek",
+   "pw": "c7e4ba2a7c41256bd1eb725818657b7eca8ce945a0cc9c48ff3f85fbbb5a53b1"
+  },
+  "9": {
+   "name": "Samandar",
+   "pw": "a9eb57f463113235efeffed88f2d3f31c11c14c58ae540259d3ab344b131c263"
+  },
   "10": {
    "name": "Zohidjon",
    "pw": "01d1e2083dc991dfdce404d9f8661c8bb19e4464bada4b87d7aebf30f7e753c5"
@@ -44,10 +76,6 @@ window.DATA={
    "name": "Fayziniso",
    "pw": "837fc5baa6e140ce4b5377f6184b96c63ec4430785683d41584ee2b710888f18"
   },
-  "2": {
-   "name": "Nuriddin",
-   "pw": ""
-  },
   "20": {
    "name": "Mubina",
    "pw": "c99d4d2d8be346ed15faeca08acc43c872a6a643608fe787d800a966a93f713f"
@@ -75,34 +103,6 @@ window.DATA={
   "26": {
    "name": "Dilxushoy",
    "pw": "d23f4490ec851d27bacd26c3ab38ae8c8754a045d9d755eb030a210b280bf96e"
-  },
-  "3": {
-   "name": "Hazratshoh",
-   "pw": "eaacede5446a8d82313258eac9b6b757c16f86954c672fe995b8816fd9df7144"
-  },
-  "4": {
-   "name": "Barkamolbek",
-   "pw": "7a68761095bb3492e45657dd5c88d6084c763bd7e378ef52d51ae0316c52ac95"
-  },
-  "5": {
-   "name": "Hayotbek",
-   "pw": "071445a0bf37a273b5c1c9d68eff09f1e9cb641be8e88709f983c3d309b74ec5"
-  },
-  "6": {
-   "name": "Vasliddin",
-   "pw": "9e72e768fc972ab55213a92a0519abacca5ee29dec5ab76eea862f558606cf81"
-  },
-  "7": {
-   "name": "Umarbek",
-   "pw": "9146e426107a45914fcb4bffe6de5985fa5a0e604275470739c209b111794e8c"
-  },
-  "8": {
-   "name": "Asilbek",
-   "pw": "c7e4ba2a7c41256bd1eb725818657b7eca8ce945a0cc9c48ff3f85fbbb5a53b1"
-  },
-  "9": {
-   "name": "Samandar",
-   "pw": "a9eb57f463113235efeffed88f2d3f31c11c14c58ae540259d3ab344b131c263"
   }
  },
  "cfg": {},
@@ -217,5 +217,11 @@ window.DATA={
    "src": "media/e4b1421983a9225b864582b981224d59.jpg",
    "sz": 1.25
   }
- ]
+ ],
+ "adm": {
+  "s": "MafkLnE9FIGpsfTS8Zok2A==",
+  "i": "YZJPGgb5kq9uxsZ0",
+  "c": "oowTPLA8Pw4GYC+sULntO597YdlCIKnws+qIqWpasILCgw7OCvGDWqWBe1My63JrL7T3eqQaimSbmy02osxPrzVcm64fSIEFMmNJ0JNHjnyOBSdosrkdIBwBOFhMPfBP7KrTIxowM8eHee9uQQ==",
+  "n": 300000
+ }
 };
